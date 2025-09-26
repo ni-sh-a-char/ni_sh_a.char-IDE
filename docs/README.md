@@ -1,191 +1,289 @@
 # ni_sh_a.char‑IDE  
 **A simple IDE to execute Python code**
 
-`ni_sh_a.char-IDE` (pronounced “nish‑a‑char‑IDE”) is a lightweight, cross‑platform Integrated Development Environment built with Python and Qt. It provides a clean editor, a built‑in console, and one‑click execution of scripts. The project is deliberately minimal – perfect for teaching, quick prototyping, or anyone who wants a no‑frills Python editor.
-
 ---
 
 ## Table of Contents
-- [Features](#features)  
-- [Installation](#installation)  
-  - [From PyPI (recommended)](#from-pypi-recommended)  
-  - [From source](#from-source)  
-- [Quick Start](#quick-start)  
-- [Usage](#usage)  
-  - [Command‑line interface](#command-line-interface)  
-  - [Graphical user interface](#graphical-user-interface)  
-- [API Documentation](#api-documentation)  
-  - [Core classes](#core-classes)  
-  - [Utility functions](#utility-functions)  
-- [Examples](#examples)  
-  - [Running a script from the CLI](#running-a-script-from-the-cli)  
-  - [Embedding the editor in another app](#embedding-the-editor-in-another-app)  
-- [Configuration & Customisation](#configuration--customisation)  
-- [Contributing](#contributing)  
-- [License](#license)  
+1. [Overview](#overview)  
+2. [Installation](#installation)  
+3. [Quick Start / Usage](#quick-start--usage)  
+4. [Command‑Line Interface (CLI)](#command-line-interface-cli)  
+5. [API Documentation](#api-documentation)  
+6. [Examples](#examples)  
+7. [Configuration](#configuration)  
+8. [Contributing](#contributing)  
+9. [License](#license)  
 
 ---
 
-## Features
-| Feature | Description |
-|---------|-------------|
-| **Syntax‑highlighted editor** | Powered by **QScintilla** (or **Qt‑TextEdit** fallback). |
-| **Integrated console** | Executes code in a separate subprocess, captures stdout/stderr, and displays results in real time. |
-| **One‑click run** | `F5` (or the toolbar button) runs the current file. |
-| **Project management** | Open a folder, browse files, and keep multiple tabs. |
-| **Cross‑platform** | Works on Windows, macOS, and Linux. |
-| **Extensible API** | Use the `char_ide` package programmatically (e.g., embed the editor in your own Qt app). |
-| **Lightweight** | No heavyweight dependencies – just Python 3.8+ and Qt. |
+## Overview
+`ni_sh_a.char-IDE` is a lightweight, cross‑platform Integrated Development Environment (IDE) designed for rapid prototyping and execution of Python scripts. It provides:
+
+* A clean, syntax‑highlighted editor.
+* An integrated console that captures `stdout`, `stderr`, and interactive input.
+* Project management (open, save, recent files).
+* Extensible plugin system (future‑ready).
+* A tiny footprint – no heavyweight dependencies beyond the standard Python distribution.
+
+> **Why use char‑IDE?**  
+> If you need a simple, no‑frills environment for quick experiments, teaching, or debugging, char‑IDE boots up in seconds and lets you focus on code rather than configuration.
 
 ---
 
 ## Installation
 
-### From PyPI (recommended)
+### Prerequisites
+| Tool | Minimum Version |
+|------|-----------------|
+| Python | 3.8+ |
+| pip | 21.0+ |
+| Git (optional) | any |
+
+> **Note:** The IDE runs on Windows, macOS, and Linux. No additional system libraries are required.
+
+### Using `pip` (recommended)
 
 ```bash
-# Create a virtual environment (optional but recommended)
-python -m venv .venv
-source .venv/bin/activate   # on Windows: .venv\Scripts\activate
-
-# Install the package
-pip install ni_sh_a.char-IDE
-```
-
-The command above installs:
-
-* `char_ide` – the Python package (core API)  
-* `char_ide_gui` – the Qt‑based desktop application (`char-ide` entry point)  
-
-### From source
-
-If you want the latest development version or need to modify the code:
-
-```bash
-# Clone the repository
-git clone https://github.com/your‑org/ni_sh_a.char-IDE.git
-cd ni_sh_a.char-IDE
-
-# (Optional) create a virtual environment
+# Create an isolated environment (optional but recommended)
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 
-# Install in editable mode with development dependencies
-pip install -e .[dev]
+# Install the latest release from PyPI
+pip install ni_sh_a.char-IDE
 ```
 
-**Development dependencies** (included in the `dev` extra)  
+### Installing from source
 
-| Package | Reason |
-|---------|--------|
-| `PyQt6` or `PySide6` | GUI toolkit |
-| `QScintilla` | Advanced code editing (syntax highlighting, line numbers) |
-| `pytest` | Test suite |
-| `sphinx` | Documentation generation |
-| `black`, `ruff` | Code formatting & linting |
+```bash
+# Clone the repository
+git clone https://github.com/your-org/ni_sh_a.char-IDE.git
+cd ni_sh_a.char-IDE
 
-> **Tip:** If you only need the GUI and not the optional `QScintilla` features, the fallback editor works out‑of‑the‑box with just `PyQt6`/`PySide6`.
+# Install in editable mode (useful for development)
+pip install -e .
+```
+
+### Verify the installation
+
+```bash
+char-ide --version
+# Expected output: char-IDE 1.2.0
+```
 
 ---
 
-## Quick Start
+## Quick Start / Usage
+
+### Launch the IDE
 
 ```bash
-# Launch the IDE (installed via pip)
 char-ide
 ```
 
-The main window opens with a blank editor. Use **File → Open** or drag‑and‑drop a `.py` file to start editing. Press **F5** (or click the ▶️ Run button) to execute the script; output appears in the bottom console pane.
+A window will appear with a split view:
+
+* **Left pane** – the code editor (supports line numbers, syntax highlighting, and basic auto‑completion).  
+* **Right pane** – the interactive console where your script’s output appears.
+
+### Basic workflow
+
+1. **Create a new file** – `File → New` or press <kbd>Ctrl+N</kbd>.  
+2. **Write Python code** – e.g.:
+
+   ```python
+   def greet(name: str) -> str:
+       return f"Hello, {name}!"
+
+   if __name__ == "__main__":
+       user = input("Your name: ")
+       print(greet(user))
+   ```
+
+3. **Run the script** – press <kbd>F5</kbd> or click the **Run** button (green triangle).  
+4. **View output** – the console will display prompts, results, and any traceback.
+
+### Keyboard shortcuts
+
+| Action | Shortcut (Windows/Linux) | Shortcut (macOS) |
+|--------|--------------------------|------------------|
+| New file | <kbd>Ctrl+N</kbd> | <kbd>⌘+N</kbd> |
+| Open file | <kbd>Ctrl+O</kbd> | <kbd>⌘+O</kbd> |
+| Save | <kbd>Ctrl+S</kbd> | <kbd>⌘+S</kbd> |
+| Run script | <kbd>F5</kbd> | <kbd>F5</kbd> |
+| Toggle console | <kbd>Ctrl+`</kbd> | <kbd>⌘+`</kbd> |
+| Find/Replace | <kbd>Ctrl+F</kbd> | <kbd>⌘+F</kbd> |
 
 ---
 
-## Usage
+## Command‑Line Interface (CLI)
 
-### Command‑line Interface
+`char-ide` ships with a small CLI that can be used in scripts or CI pipelines.
 
-`char-ide` ships with a small CLI wrapper that can be used in scripts or from the terminal.
+### Run a script directly
 
 ```bash
-# Run a script directly (no GUI)
 char-ide run path/to/script.py
-
-# Open the GUI with a specific file pre‑loaded
-char-ide open path/to/script.py
 ```
 
-#### CLI Options
+* Executes `script.py` in the same sandbox as the GUI console.
+* Returns the script’s exit code.
 
-| Option | Alias | Description |
-|--------|-------|-------------|
-| `--run`, `-r` | | Execute the given file and exit (non‑interactive). |
-| `--open`, `-o` | | Open the GUI with the file loaded. |
-| `--project`, `-p` | | Open a folder as a project (shows file tree). |
-| `--no-console` | | Hide the integrated console on start‑up. |
-| `--theme <name>` | | Choose a built‑in theme (`light`, `dark`). |
-| `--help`, `-h` | | Show help. |
+### Open a project folder
 
-### Graphical User Interface
+```bash
+char-ide open /path/to/project/
+```
 
-| Area | Description |
-|------|-------------|
-| **Menu Bar** | File, Edit, View, Run, Help. |
-| **Toolbar** | New, Open, Save, Run (▶️), Stop (⏹), Theme selector. |
-| **Editor Pane** | Tabbed code editors with line numbers, auto‑indent, and syntax highlighting. |
-| **Console Pane** | Real‑time stdout/stderr, input support, clear button. |
-| **Project Explorer** (optional) | Left‑hand tree view of the opened folder. |
-| **Status Bar** | Shows cursor position, file encoding, and execution time. |
+* Opens the IDE with the folder listed in the **File Explorer** pane (future feature).
 
-#### Keyboard shortcuts
+### Show help
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl+N` / `Cmd+N` | New file |
-| `Ctrl+O` / `Cmd+O` | Open file |
-| `Ctrl+S` / `Cmd+S` | Save |
-| `Ctrl+Shift+S` / `Cmd+Shift+S` | Save As |
-| `F5` | Run current file |
-| `Shift+F5` | Stop running script |
-| `Ctrl+/**` | Toggle comment on selected lines |
-| `Ctrl+P` / `Cmd+P` | Quick file picker |
-| `Ctrl+Q` / `Cmd+Q` | Quit |
+```bash
+char-ide --help
+```
+
+```
+Usage: char-ide [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --version          Show the version and exit.
+  -v, --verbose      Enable verbose logging.
+  --help             Show this message and exit.
+
+Commands:
+  run      Execute a Python file and stream output to stdout.
+  open     Open a directory as a project workspace.
+  gui      Launch the graphical IDE (default command).
+```
 
 ---
 
 ## API Documentation
 
-`ni_sh_a.char-IDE` can be used as a library. The public API lives in the `char_ide` package.
+The library can be imported and used programmatically. Below is a high‑level overview of the public API. All classes are defined in `char_ide.core`.
 
-### Core classes
+### Core Modules
 
-| Class | Import path | Purpose |
-|-------|-------------|---------|
-| `IDEApplication` | `char_ide.app` | Subclass of `QApplication` that sets up the main window, theme handling, and global shortcuts. |
-| `MainWindow` | `char_ide.gui` | The top‑level Qt `QMainWindow` containing the editor, console, and project explorer. |
-| `EditorWidget` | `char_ide.editor` | A `QScintilla`‑based widget (fallback to `QPlainTextEdit`). Provides `load_file()`, `save_file()`, `run_current_file()`. |
-| `ConsoleWidget` | `char_ide.console` | Captures subprocess output, supports input via `write()` and `readline()`. |
-| `Runner` | `char_ide.runner` | Handles execution of a Python script in a separate process, streams output to `ConsoleWidget`. |
-| `ProjectModel` | `char_ide.project` | `QFileSystemModel` wrapper that filters for Python files and provides a tree view. |
+| Module | Description |
+|--------|-------------|
+| `char_ide.core.editor` | Provides `Editor` – a thin wrapper around `tkinter.Text` with syntax highlighting. |
+| `char_ide.core.console` | Implements `Console` – a pseudo‑terminal that captures `stdout`/`stderr` and forwards `input()` calls. |
+| `char_ide.core.runner` | Contains `ScriptRunner` – executes a Python file in an isolated namespace. |
+| `char_ide.core.project` | Handles `Project` objects (open/save, recent files list). |
+| `char_ide.api` | Public façade exposing `run_file`, `launch_gui`, and `get_version`. |
 
-#### Example – launching the GUI programmatically
+### Example: Using the API in a script
 
 ```python
-from char_ide.app import IDEApplication
-from char_ide.gui import MainWindow
+from char_ide.api import run_file, launch_gui, get_version
 
-def launch():
-    app = IDEApplication(sys.argv)
-    win = MainWindow()
-    win.show()
-    sys.exit(app.exec())
+# 1️⃣ Print the current version
+print("char‑IDE version:", get_version())
 
-if __name__ == "__main__":
-    launch()
+# 2️⃣ Run a script programmatically (captures output)
+output, error, exit_code = run_file("examples/hello_world.py")
+print("STDOUT:", output)
+print("STDERR:", error)
+print("Exit code:", exit_code)
+
+# 3️⃣ Launch the full GUI from another Python process
+launch_gui()   # blocks until the window is closed
 ```
 
-### Utility functions
+### Detailed Class Reference
 
-| Function | Module | Description |
-|----------|--------|-------------|
-| `run_file(path: str, cwd: Optional[str] = None) -> subprocess.CompletedProcess` | `char_ide.runner` | Synchronously run a script and return the completed process (captures stdout/stderr). |
-| `set_theme(name: str)` | `char_ide.themes` | Switch between built‑in themes (`light`, `dark`, `solarized`). |
-| `format_code(source: str) -> str` | `char_ide.formatter` | Auto‑format Python code using **black** (fallback to `auto
+#### `char_ide.core.runner.ScriptRunner`
+
+```python
+class ScriptRunner:
+    def __init__(self, script_path: str, *, cwd: str | None = None):
+        """Create a runner for *script_path*.
+        Parameters
+        ----------
+        script_path: str
+            Absolute or relative path to the Python file.
+        cwd: str | None
+            Working directory for the script (defaults to script's folder).
+        """
+
+    def run(self) -> tuple[str, str, int]:
+        """Execute the script.
+        Returns
+        -------
+        (stdout, stderr, exit_code)
+        """
+```
+
+#### `char_ide.core.console.Console`
+
+* `write(text: str) -> None` – Append text to the console view.  
+* `flush() -> None` – Required for file‑like compatibility.  
+* `input(prompt: str = "") -> str` – Prompt the user and return the typed line.
+
+#### `char_ide.core.editor.Editor`
+
+* `load_file(path: str) -> None` – Populate the editor with a file’s contents.  
+* `save_file(path: str) -> None` – Write the current buffer to *path*.  
+* `get_text() -> str` – Return the current buffer as a string.
+
+---
+
+## Examples
+
+### 1️⃣ Hello World (GUI)
+
+1. Open the IDE (`char-ide`).  
+2. Paste the following code into the editor:
+
+   ```python
+   print("Hello, char‑IDE!")
+   ```
+
+3. Press <kbd>F5</kbd>.  
+4. The console shows:
+
+   ```
+   Hello, char‑IDE!
+   ```
+
+### 2️⃣ Interactive Prompt
+
+```python
+# interactive_demo.py
+name = input("Enter your name: ")
+print(f"Welcome, {name}!")
+```
+
+*Run it*: `F5` → the console will pause for input, you type `Alice`, and see:
+
+```
+Enter your name: Alice
+Welcome, Alice!
+```
+
+### 3️⃣ Using the API in a Jupyter notebook
+
+```python
+from char_ide.api import run_file
+
+stdout, stderr, rc = run_file("examples/math_demo.py")
+print("Result:", stdout)
+```
+
+### 4️⃣ Batch execution from a CI pipeline
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11
