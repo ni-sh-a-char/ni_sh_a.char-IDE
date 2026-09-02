@@ -9,6 +9,8 @@
 [![CI](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/actions/workflows/ci.yml/badge.svg)](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/nishachar-ide?logo=pypi&logoColor=white&color=3775A9)](https://pypi.org/project/nishachar-ide/)
 [![npm](https://img.shields.io/npm/v/@nishachar/ide?logo=npm&color=CB3837)](https://www.npmjs.com/package/@nishachar/ide)
+[![pub](https://img.shields.io/pub/v/nishachar_ide?logo=dart&logoColor=white&color=0175C2)](https://pub.dev/packages/nishachar_ide)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.ni-sh-a-char/nishachar-ide?logo=apachemaven&logoColor=white&color=C71A36)](https://central.sonatype.com/artifact/io.github.ni-sh-a-char/nishachar-ide)
 [![License](https://img.shields.io/badge/license-Apache--2.0-D22128.svg)](LICENSE)
 [![Languages](https://img.shields.io/badge/languages-62-7C5CFF)](languages/)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-24C38E.svg)](CONTRIBUTING.md)
@@ -33,6 +35,19 @@ Or drop it into any web page, in one line:
 ```
 
 That snippet has **no backend**. It executes in the visitor's browser tab.
+
+### Available everywhere you already work
+
+| Ecosystem | Install | What you get |
+|:--|:--|:--|
+| **Python** | `pip install nishachar-ide` | The engine, the CLI, the IDE, the server |
+| **npm** | `npm i @nishachar/ide` | `<nishachar-ide>` web component |
+| **Dart / Flutter** | `dart pub add nishachar_ide` | Typed client + the registry, offline |
+| **Maven / Gradle** | `io.github.ni-sh-a-char:nishachar-ide` | Kotlin & Java client, zero dependencies |
+| **Docker** | `ghcr.io/ni-sh-a-char/nishachar-ide` | The server, containerised |
+
+Every client ships the same 62-language registry compiled in, so language
+lookup works offline and before any backend exists.
 
 ---
 
@@ -127,6 +142,16 @@ Read [SECURITY.md](SECURITY.md) for the full model, including what it does *not*
 ## Contributing
 
 Good first issues are labelled [`good first issue`](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/labels/good%20first%20issue), and the easiest of them is adding your favourite language. See [CONTRIBUTING.md](CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Support this project
+
+ni_sh_a.char-IDE is free, Apache-2.0, and architected so it costs nothing to
+run — there is no hosted runner to pay for, and there never will be. If it
+saves you time, you can [buy me a coffee](https://buymeacoffee.com/piyushmishra00).
+
+<a href="https://buymeacoffee.com/piyushmishra00" target="_blank"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy me a coffee"></a>
+
+Starring the repo helps just as much — it is how other people find it.
 
 ## License
 

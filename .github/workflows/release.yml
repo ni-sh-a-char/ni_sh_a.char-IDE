@@ -66,6 +66,73 @@ jobs:
           fi
           npm publish --access public --provenance
 
+  pub:
+    name: Publish to pub.dev
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write # pub.dev automated publishing uses OIDC -- no token stored.
+    defaults:
+      run:
+        working-directory: packages/dart
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "3.5"
+      - run: dart pub get
+      - run: dart pub publish --dry-run
+      - name: Publish
+        run: dart pub publish --force
+
+  maven:
+    name: Publish to Maven Central
+    runs-on: ubuntu-latest
+    environment: release
+    defaults:
+      run:
+        working-directory: packages/kotlin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+          # Writes ~/.m2/settings.xml with a `central` server entry.
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Skip when Central credentials are absent
+        id: gate
+        env:
+          USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        run: |
+          if [ -z "${USERNAME}" ]; then
+            echo "MAVEN_CENTRAL_USERNAME is not set -- skipping publish."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy signed artifacts
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: mvn -B --no-transfer-progress -P release deploy
+
+      - name: Attach the JAR to the GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            packages/kotlin/target/nishachar-ide-*.jar
+
   container:
     name: Publish the container image
     runs-on: ubuntu-latest

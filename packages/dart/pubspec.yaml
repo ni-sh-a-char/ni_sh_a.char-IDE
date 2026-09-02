@@ -1,0 +1,25 @@
+name: nishachar_ide
+description: >-
+  Run any language, anywhere. A Dart and Flutter client for the ni_sh_a.char-IDE
+  polyglot execution engine, with the full 62-language registry built in.
+version: 2.0.0
+repository: https://github.com/ni-sh-a-char/ni_sh_a.char-IDE
+homepage: https://ni-sh-a-char.github.io/ni_sh_a.char-IDE/
+issue_tracker: https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/issues
+documentation: https://ni-sh-a-char.github.io/ni_sh_a.char-IDE/docs/
+topics:
+  - ide
+  - code-execution
+  - polyglot
+  - developer-tools
+  - sandbox
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  http: ^1.2.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.0

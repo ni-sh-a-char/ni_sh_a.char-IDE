@@ -88,12 +88,12 @@ nishachar-ide::part(toolbar) { border-bottom: 2px solid var(--nsc-accent); }
 ## Framework notes
 
 Full examples for React, Vue, Svelte and Angular:
-[examples/embedding](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/examples/embedding/README.md).
+[examples/embedding](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/v2.0.0/examples/embedding/README.md).
 
 ## Links
 
 - [Live demo](https://ni-sh-a-char.github.io/ni_sh_a.char-IDE/)
 - [Repository](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE)
-- [Add a language](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md)
+- [Add a language](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/v2.0.0/languages/README.md)
 
 Apache-2.0 © Piyush Mishra

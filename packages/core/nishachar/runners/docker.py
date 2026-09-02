@@ -146,6 +146,10 @@ class DockerRunner:
             "--tmpfs", f"/tmp:rw,exec,size={limits.tmpfs_size}",
             "--cap-drop", "ALL",
             "--security-opt", "no-new-privileges",
+            # Containers default to a C locale; ask for UTF-8 for the same
+            # reason the local runner does. See runners/local.py.
+            "-e", "PYTHONUTF8=1",
+            "-e", "PYTHONIOENCODING=utf-8",
             "-v", f"{mount}:{WORK}",
             "-w", WORK,
             image,

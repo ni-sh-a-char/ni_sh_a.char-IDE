@@ -63,6 +63,30 @@ def _spawn_kwargs() -> dict:
     return {"start_new_session": True}
 
 
+# Output is always decoded as UTF-8 (see runners.base.clamp), so children are
+# asked to produce it. Without this, a program printing anything non-ASCII dies
+# on Windows: Python picks the ANSI code page for a piped stdout, and
+# print("Hello, 世界") raises UnicodeEncodeError before the IDE sees a byte.
+UTF8_ENV = {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8",
+}
+
+
+def child_env() -> dict[str, str]:
+    """The environment a program runs with.
+
+    The host environment is inherited -- this tier has no isolation and
+    pretending otherwise would only break toolchains that need PATH, HOME or
+    GOCACHE. Only the UTF-8 hints are added, and only where the user has not
+    set them, so an explicit choice always wins.
+    """
+    env = dict(os.environ)
+    for key, value in UTF8_ENV.items():
+        env.setdefault(key, value)
+    return env
+
+
 class LocalRunner:
     """Executes code as a subprocess using the host's installed toolchains."""
 
@@ -150,6 +174,7 @@ class LocalRunner:
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
+                env=child_env(),
                 **_spawn_kwargs(),
             )
         except FileNotFoundError:

@@ -49,13 +49,13 @@ are scoped to be finishable in one sitting.
 
 ## Setting up
 
-Source lives on the **`develop`** branch. `main` holds the website and
+Source lives on the **`v2.0.0`** branch. `main` holds the website and
 community documents only.
 
 ```bash
 git clone https://github.com/ni-sh-a-char/ni_sh_a.char-IDE.git
 cd ni_sh_a.char-IDE
-git checkout develop
+git checkout v2.0.0
 
 pip install -e ".[dev]"          # Python engine + CLI
 cd packages/web && npm install   # the web component
@@ -84,7 +84,7 @@ python -m ruff check .   # lint
 
 ## Pull requests
 
-- Branch from `develop`, and target `develop`.
+- Branch from `v2.0.0`, and target `v2.0.0`.
 - Keep it focused. One language, one fix, one feature.
 - Add a test when you change behaviour. `tests/` shows the style.
 - Run `python -m pytest` and `python -m ruff check .` before pushing.

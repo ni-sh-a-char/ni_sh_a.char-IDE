@@ -162,6 +162,35 @@ def test_source_filename_override_is_honoured(tmp_path: Path):
 # requires Docker and is covered by the integration job in CI.
 
 
+def test_non_ascii_output_survives():
+    """Regression: on Windows a piped child defaults to the ANSI code page,
+    so print("Hello, ...") died with UnicodeEncodeError before the IDE saw a
+    byte. Output is decoded as UTF-8, so children are asked to produce it."""
+    result = nishachar.run("print('héllo ✓ 日本 🚀')", "python")
+    assert result.exit_code == 0, result.stderr
+    assert result.stdout.strip() == "héllo ✓ 日本 🚀"
+
+
+def test_non_ascii_stdin_survives():
+    result = nishachar.run("print(input())", "python", stdin="café ✓\n")
+    assert result.stdout.strip() == "café ✓"
+
+
+def test_child_env_does_not_override_an_explicit_choice(monkeypatch):
+    from nishachar.runners.local import child_env
+
+    monkeypatch.setenv("PYTHONIOENCODING", "latin-1")
+    assert child_env()["PYTHONIOENCODING"] == "latin-1"
+    assert child_env()["PYTHONUTF8"] == "1"
+
+
+def test_child_env_inherits_the_host_path():
+    """This tier has no isolation; stripping PATH would only break toolchains."""
+    from nishachar.runners.local import child_env
+
+    assert "PATH" in child_env() or "Path" in child_env()
+
+
 def test_docker_command_applies_every_sandbox_flag():
     argv = DockerRunner().container_argv("python:3.12-slim", Path("/tmp/w"), ["python", "main.py"])
     joined = " ".join(argv)
@@ -171,6 +200,7 @@ def test_docker_command_applies_every_sandbox_flag():
     assert "--security-opt no-new-privileges" in joined
     assert "--memory 256m" in joined
     assert "--pids-limit 128" in joined
+    assert "PYTHONUTF8=1" in joined, "containers default to a C locale"
     assert argv[-2:] == ["python", "main.py"]
     assert "--rm" in argv
 

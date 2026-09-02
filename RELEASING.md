@@ -43,7 +43,7 @@ Nothing to do. It authenticates with the built-in `GITHUB_TOKEN`.
 ## Cutting a release
 
 ```bash
-git checkout develop
+git checkout v2.0.0
 
 # 1. Bump the version in both places -- they must match.
 #    pyproject.toml            [project] version
@@ -58,7 +58,7 @@ cd packages/web && npm run build && cd ../..
 
 git commit -am "chore: release vX.Y.Z"
 git tag -a vX.Y.Z -m "vX.Y.Z — <headline>"
-git push origin develop --tags
+git push origin v2.0.0 --tags
 ```
 
 Then create the GitHub Release from the tag. The workflow does the rest.

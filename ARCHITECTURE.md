@@ -115,7 +115,7 @@ mysteriously.
 ## Repository layout
 
 `main` is the front door: README, community files, the website. All source
-lives on `develop`.
+lives on `v2.0.0`.
 
 ```
 packages/core/nishachar/

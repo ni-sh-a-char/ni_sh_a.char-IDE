@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [develop, main]
+    branches: [v2.0.0, main]
   pull_request:
-    branches: [develop, main]
+    branches: [v2.0.0, main]
   workflow_dispatch:
 
 permissions:
@@ -145,10 +145,98 @@ jobs:
           print("network isolation: confirmed")
           PY
 
+  bindings:
+    name: Generated bindings are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "3.5"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Regenerate and diff
+        run: |
+          python tools/generate_bindings.py
+          if ! git diff --quiet; then
+            echo "::error::languages/ changed without regenerating the Dart/Kotlin registry."
+            echo "Run: python tools/generate_bindings.py"
+            git --no-pager diff --stat
+            exit 1
+          fi
+          echo "Dart and Kotlin registries match languages/"
+
+  dart:
+    name: Dart client
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/dart
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "3.5"
+      - run: dart pub get
+      - name: Format
+        run: dart format --output=none --set-exit-if-changed .
+      - name: Analyze
+        run: dart analyze --fatal-infos
+      - name: Test
+        run: dart test
+      - name: Package must be publishable
+        run: dart pub publish --dry-run
+
+  kotlin:
+    name: Kotlin client
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/kotlin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+      - name: Test
+        run: mvn -B --no-transfer-progress test
+      - name: Build every artifact Maven Central requires
+        run: mvn -B --no-transfer-progress package -DskipTests
+      - name: Verify the jar set
+        run: |
+          set -euo pipefail
+          for suffix in "" "-sources" "-javadoc"; do
+            test -s "target/nishachar-ide-2.0.0${suffix}.jar" || {
+              echo "::error::missing target/nishachar-ide-2.0.0${suffix}.jar"; exit 1; }
+          done
+          unzip -l target/nishachar-ide-2.0.0.jar | grep -q "io/github/nishachar/NishacharClient.class"
+          echo "jar, sources and javadoc all present"
+      - name: The library must be usable from plain Java
+        run: |
+          set -euo pipefail
+          mvn -B -q --no-transfer-progress dependency:build-classpath -Dmdep.outputFile=cp.txt
+          mkdir -p /tmp/javacheck
+          cat > /tmp/javacheck/Check.java <<'JAVA'
+          import io.github.nishachar.*;
+          public class Check {
+            public static void main(String[] a) {
+              if (NishacharClient.getLanguages().size() < 60) throw new AssertionError("registry");
+              if (!"Rust".equals(NishacharClient.find(".rs").getName())) throw new AssertionError("find");
+              System.out.println("Java interop OK: " + NishacharClient.getLanguages().size() + " languages");
+            }
+          }
+          JAVA
+          CP="target/nishachar-ide-2.0.0.jar:$(cat cp.txt)"
+          javac -cp "$CP" -d /tmp/javacheck /tmp/javacheck/Check.java
+          java -cp "$CP:/tmp/javacheck" Check
+
   build:
     name: Build distributions
     runs-on: ubuntu-latest
-    needs: [test, web]
+    needs: [test, web, dart, kotlin]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
