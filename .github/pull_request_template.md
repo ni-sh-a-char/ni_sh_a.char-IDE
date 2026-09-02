@@ -8,7 +8,7 @@
 
 ## Checklist
 
-- [ ] Branched from `develop` and targeting `develop`
+- [ ] Branched from `v2.0.0` and targeting `v2.0.0`
 - [ ] `python -m pytest` passes
 - [ ] `python -m ruff check .` passes
 

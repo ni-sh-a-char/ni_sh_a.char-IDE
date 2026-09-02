@@ -29,7 +29,7 @@ nishachar run -l ruby -c 'puts "hi"'
 ```
 
 Open a PR. That's the whole process. Full field reference:
-[`languages/README.md`](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md).
+[`languages/README.md`](languages/README.md).
 
 **Your favourite language is probably missing.** There are thousands; we ship
 62.
@@ -37,7 +37,7 @@ Open a PR. That's the whole process. Full field reference:
 ## Other good first contributions
 
 - **Write a real syntax grammar** for a language currently borrowing another's
-  — see the `NEAREST` map in [`packages/web/src/modes.js`](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/packages/web/src/modes.js).
+  — see the `NEAREST` map in [`packages/web/src/modes.js`](packages/web/src/modes.js).
 - **Fix a wrong command.** Some registry entries are best-effort; if a language
   you know well doesn't run correctly, you are the right person to fix it.
 - **Improve an error message.** If something confused you, it will confuse the
@@ -49,13 +49,13 @@ are scoped to be finishable in one sitting.
 
 ## Setting up
 
-Source lives on the **`develop`** branch. `main` holds the website and
+Source lives on the **`v2.0.0`** branch. `main` holds the website and
 community documents only.
 
 ```bash
 git clone https://github.com/ni-sh-a-char/ni_sh_a.char-IDE.git
 cd ni_sh_a.char-IDE
-git checkout develop
+git checkout v2.0.0
 
 pip install -e ".[dev]"          # Python engine + CLI
 cd packages/web && npm install   # the web component
@@ -84,7 +84,7 @@ python -m ruff check .   # lint
 
 ## Pull requests
 
-- Branch from `develop`, and target `develop`.
+- Branch from `v2.0.0`, and target `v2.0.0`.
 - Keep it focused. One language, one fix, one feature.
 - Add a test when you change behaviour. `tests/` shows the style.
 - Run `python -m pytest` and `python -m ruff check .` before pushing.

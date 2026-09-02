@@ -11,7 +11,7 @@ body:
 
         **Adding one yourself is genuinely easy** — it is a single JSON file and
         no source code changes. If you'd like to, say so below and it's yours.
-        The guide is [languages/README.md](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md).
+        The guide is [languages/README.md](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/v2.0.0/languages/README.md).
 
   - type: input
     id: language

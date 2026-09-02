@@ -7,7 +7,7 @@ open to contribution — several items are tagged
 ## Now (2.1)
 
 - **More languages.** 62 is a start, not a finish. Each is
-  [8 lines of JSON](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md).
+  [8 lines of JSON](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/v2.0.0/languages/README.md).
 - **Real grammars** for languages currently borrowing a relative's
   highlighting — Elixir, Nim, Zig, Prolog, Solidity and PHP all deserve better
   than a stand-in. See `NEAREST` in `packages/web/src/modes.js`.

@@ -2,7 +2,7 @@
 
 This directory is populated at deploy time by
 [`.github/workflows/pages.yml`](../../.github/workflows/pages.yml), which checks
-out the `develop` branch, builds the web component, and copies the bundle here.
+out the `v2.0.0` branch, builds the web component, and copies the bundle here.
 
 Nothing in here is committed, so the site can never ship a stale build and the
 demo does not depend on npm having published yet.

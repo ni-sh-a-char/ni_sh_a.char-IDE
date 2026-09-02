@@ -64,7 +64,7 @@ IDE sharing one codebase.
 - Output line endings are normalised, so identical programs produce identical
   output on Windows and POSIX.
 - Repository restructured: `main` holds community documents and the website,
-  `develop` holds all source.
+  `v2.0.0` holds all source.
 
 ### Removed
 

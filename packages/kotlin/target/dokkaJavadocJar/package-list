@@ -1,0 +1,5 @@
+$dokka.format:javadoc-v1
+$dokka.linkExtension:html
+$dokka.location:io.github.nishachar/NishacharClient.Companion///PointingToDeclaration/io/github/nishachar/NishacharClient.Companion.html
+io.github.nishachar
+

@@ -8,7 +8,7 @@ updates:
 
   - package-ecosystem: npm
     directory: /packages/web
-    target-branch: develop
+    target-branch: v2.0.0
     schedule: { interval: monthly }
     commit-message: { prefix: "deps" }
     labels: ["dependencies"]
@@ -22,7 +22,7 @@ updates:
 
   - package-ecosystem: pip
     directory: /
-    target-branch: develop
+    target-branch: v2.0.0
     schedule: { interval: monthly }
     commit-message: { prefix: "deps" }
     labels: ["dependencies"]

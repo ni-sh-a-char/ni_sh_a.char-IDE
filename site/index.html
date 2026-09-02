@@ -250,6 +250,35 @@ p code, li code, td code {
 .step h3 { font-size: 1rem; margin-bottom: 6px; }
 .step p { color: var(--muted); font-size: .93rem; margin-bottom: 10px; }
 
+.support {
+  margin-top: 52px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px 32px;
+  background:
+    linear-gradient(180deg, rgba(255,221,0,.05), transparent 60%),
+    var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.support div { flex: 1 1 340px; min-width: 0; }
+.support h3 { font-size: 1.22rem; margin-bottom: 10px; }
+.support p { color: var(--muted); font-size: .96rem; }
+.bmc {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #FFDD00; color: #14140d;
+  border-radius: 10px; padding: 13px 22px;
+  font: 700 14.5px var(--sans); white-space: nowrap;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.bmc:hover {
+  text-decoration: none; transform: translateY(-2px);
+  box-shadow: 0 10px 26px -8px rgba(255,221,0,.45);
+}
+.bmc svg { width: 19px; height: 19px; }
+
 footer { border-top: 1px solid var(--border); padding: 52px 0 44px; color: var(--dim); font-size: 14px; }
 .foot-grid { display: flex; gap: 40px; flex-wrap: wrap; justify-content: space-between; margin-bottom: 34px; }
 .foot-col h4 {
@@ -401,7 +430,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 44px; color: var(-
 }</pre>
         <p style="color:var(--muted);font-size:.92rem;margin-top:14px">
           Commands are argument vectors, never shell strings — so there is no quoting to get
-          right and nothing to inject. <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md">Full field reference →</a>
+          right and nothing to inject. <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/v2.0.0/languages/README.md">Full field reference →</a>
         </p>
       </div>
     </div>
@@ -484,6 +513,29 @@ ide.<span class="t">addEventListener</span>(<span class="s">'result'</span>, e =
         <p>In-browser execution means your code is never transmitted anywhere. Open the network tab during a run and watch nothing happen.</p>
       </div>
     </div>
+
+    <div class="support">
+      <div>
+        <h3>The servers are free. The evenings weren't.</h3>
+        <p>
+          This project costs nothing to run, and that is deliberate &mdash; so it will still
+          be here in five years. It did cost a lot of evenings to build. If it saved you
+          some of yours, a coffee is a kind way to say so. Starring the repo is free and
+          helps just as much.
+        </p>
+      </div>
+      <a class="bmc" href="https://buymeacoffee.com/piyushmishra00" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+          <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4Z"/>
+          <line x1="6" y1="1" x2="6" y2="4"/>
+          <line x1="10" y1="1" x2="10" y2="4"/>
+          <line x1="14" y1="1" x2="14" y2="4"/>
+        </svg>
+        Buy me a coffee
+      </a>
+    </div>
   </div>
 </section>
 
@@ -516,7 +568,7 @@ ide.<span class="t">addEventListener</span>(<span class="s">'result'</span>, e =
       </div>
     </div>
     <div class="cta" style="justify-content:flex-start;margin-top:36px">
-      <a class="btn btn-primary" href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md" target="_blank" rel="noopener">Add a language</a>
+      <a class="btn btn-primary" href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/v2.0.0/languages/README.md" target="_blank" rel="noopener">Add a language</a>
       <a class="btn btn-ghost" href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/labels/good%20first%20issue" target="_blank" rel="noopener">Good first issues</a>
     </div>
   </div>
@@ -556,6 +608,7 @@ ide.<span class="t">addEventListener</span>(<span class="s">'result'</span>, e =
         <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/discussions">Discussions</a>
         <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/issues">Issues</a>
         <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/main/SECURITY.md">Security</a>
+        <a href="https://buymeacoffee.com/piyushmishra00">Buy me a coffee</a>
       </div>
     </div>
     <div class="foot-bottom">
