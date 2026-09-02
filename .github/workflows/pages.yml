@@ -27,10 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the site (main)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check out the source (v2.0.0)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: refs/heads/v2.0.0   # fully qualified: a tag shares this name
           path: .source
