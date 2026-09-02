@@ -1,0 +1,24 @@
+{
+  "$schema": "./schema.json",
+  "id": "commonlisp",
+  "name": "Common Lisp",
+  "aliases": [
+    "lisp",
+    "cl",
+    "sbcl"
+  ],
+  "extensions": [
+    ".lisp",
+    ".lsp"
+  ],
+  "comment": ";;",
+  "highlight": "commonlisp",
+  "image": "clfoundation/sbcl:latest",
+  "run": [
+    "sbcl",
+    "--script",
+    "{file}"
+  ],
+  "template": "(format t \"Hello from Common Lisp!~%\")\n",
+  "website": "https://common-lisp.net"
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "id": "swift",
+  "name": "Swift",
+  "aliases": [],
+  "extensions": [
+    ".swift"
+  ],
+  "comment": "//",
+  "highlight": "swift",
+  "image": "swift:5.10-slim",
+  "run": [
+    "swift",
+    "{file}"
+  ],
+  "template": "print(\"Hello from Swift!\")\n",
+  "website": "https://www.swift.org"
+}

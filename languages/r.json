@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "r",
+  "name": "R",
+  "aliases": [
+    "rlang"
+  ],
+  "extensions": [
+    ".r",
+    ".R"
+  ],
+  "comment": "#",
+  "highlight": "r",
+  "image": "r-base:latest",
+  "run": [
+    "Rscript",
+    "{file}"
+  ],
+  "template": "cat(\"Hello from R!\\n\")\n",
+  "website": "https://www.r-project.org"
+}

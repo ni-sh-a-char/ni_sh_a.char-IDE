@@ -1,0 +1,23 @@
+{
+  "$schema": "./schema.json",
+  "id": "sqlite",
+  "name": "SQL (SQLite)",
+  "aliases": [
+    "sql"
+  ],
+  "extensions": [
+    ".sql"
+  ],
+  "comment": "--",
+  "highlight": "sql",
+  "image": "keinos/sqlite3:latest",
+  "run": [
+    "sqlite3",
+    ":memory:",
+    "-init",
+    "{file}",
+    ".quit"
+  ],
+  "template": "SELECT 'Hello from SQLite!' AS greeting;\n",
+  "website": "https://www.sqlite.org"
+}

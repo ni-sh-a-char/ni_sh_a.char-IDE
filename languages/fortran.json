@@ -1,0 +1,28 @@
+{
+  "$schema": "./schema.json",
+  "id": "fortran",
+  "name": "Fortran",
+  "aliases": [
+    "f90"
+  ],
+  "extensions": [
+    ".f90",
+    ".f95"
+  ],
+  "comment": "!",
+  "highlight": "fortran",
+  "image": "gcc:14",
+  "compile": [
+    [
+      "gfortran",
+      "{file}",
+      "-o",
+      "{bin}"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "program hello\n    print *, \"Hello from Fortran!\"\nend program hello\n",
+  "website": "https://fortran-lang.org"
+}

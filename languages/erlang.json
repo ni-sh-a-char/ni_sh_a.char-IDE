@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "erlang",
+  "name": "Erlang",
+  "aliases": [
+    "erl"
+  ],
+  "extensions": [
+    ".erl"
+  ],
+  "comment": "%",
+  "highlight": "erlang",
+  "image": "erlang:26-alpine",
+  "run": [
+    "escript",
+    "{file}"
+  ],
+  "template": "main(_) ->\n    io:format(\"Hello from Erlang!~n\").\n",
+  "website": "https://www.erlang.org"
+}

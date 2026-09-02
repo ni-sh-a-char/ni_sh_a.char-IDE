@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "id": "io",
+  "name": "Io",
+  "aliases": [],
+  "extensions": [
+    ".io"
+  ],
+  "comment": "//",
+  "highlight": "io",
+  "image": "esolang/io",
+  "run": [
+    "io",
+    "{file}"
+  ],
+  "template": "\"Hello from Io!\" println\n",
+  "website": "https://iolanguage.org"
+}

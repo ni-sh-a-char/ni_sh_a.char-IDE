@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "raku",
+  "name": "Raku",
+  "aliases": [
+    "perl6"
+  ],
+  "extensions": [
+    ".raku",
+    ".p6"
+  ],
+  "comment": "#",
+  "highlight": "perl",
+  "image": "rakudo-star:latest",
+  "run": [
+    "raku",
+    "{file}"
+  ],
+  "template": "say \"Hello from Raku!\";\n",
+  "website": "https://raku.org"
+}

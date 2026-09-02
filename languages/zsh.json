@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema.json",
+  "id": "zsh",
+  "name": "Zsh",
+  "aliases": [],
+  "extensions": [
+    ".zsh"
+  ],
+  "comment": "#",
+  "highlight": "shell",
+  "image": "alpine:latest",
+  "setup": [
+    [
+      "apk",
+      "add",
+      "--no-cache",
+      "zsh"
+    ]
+  ],
+  "run": [
+    "zsh",
+    "{file}"
+  ],
+  "template": "echo \"Hello from Zsh!\"\n",
+  "website": "https://www.zsh.org"
+}

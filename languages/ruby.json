@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "ruby",
+  "name": "Ruby",
+  "aliases": [
+    "rb"
+  ],
+  "extensions": [
+    ".rb"
+  ],
+  "comment": "#",
+  "highlight": "ruby",
+  "image": "ruby:3.3-slim",
+  "run": [
+    "ruby",
+    "{file}"
+  ],
+  "template": "puts \"Hello from Ruby!\"\n",
+  "website": "https://www.ruby-lang.org"
+}

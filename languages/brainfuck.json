@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "brainfuck",
+  "name": "Brainfuck",
+  "aliases": [
+    "bf"
+  ],
+  "extensions": [
+    ".bf",
+    ".b"
+  ],
+  "comment": "#",
+  "highlight": "brainfuck",
+  "image": "esolang/brainfuck",
+  "run": [
+    "brainfuck",
+    "{file}"
+  ],
+  "template": "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.\n",
+  "website": "https://esolangs.org/wiki/Brainfuck"
+}

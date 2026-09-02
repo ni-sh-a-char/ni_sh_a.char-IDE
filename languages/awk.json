@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "awk",
+  "name": "AWK",
+  "aliases": [
+    "gawk"
+  ],
+  "extensions": [
+    ".awk"
+  ],
+  "comment": "#",
+  "highlight": "awk",
+  "image": "alpine:latest",
+  "run": [
+    "awk",
+    "-f",
+    "{file}"
+  ],
+  "template": "BEGIN { print \"Hello from AWK!\" }\n",
+  "website": "https://www.gnu.org/software/gawk/"
+}

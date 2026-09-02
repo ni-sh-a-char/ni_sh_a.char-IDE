@@ -1,0 +1,37 @@
+{
+  "$schema": "./schema.json",
+  "id": "assembly",
+  "name": "Assembly (NASM)",
+  "aliases": [
+    "asm",
+    "nasm"
+  ],
+  "extensions": [
+    ".asm",
+    ".s"
+  ],
+  "comment": ";",
+  "highlight": "assembly",
+  "image": "esolang/nasm",
+  "compile": [
+    [
+      "nasm",
+      "-f",
+      "elf64",
+      "{file}",
+      "-o",
+      "{dir}/o.o"
+    ],
+    [
+      "ld",
+      "{dir}/o.o",
+      "-o",
+      "{bin}"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "section .data\n    msg db \"Hello from Assembly!\", 10\n    len equ $ - msg\n\nsection .text\n    global _start\n_start:\n    mov rax, 1\n    mov rdi, 1\n    mov rsi, msg\n    mov rdx, len\n    syscall\n    mov rax, 60\n    xor rdi, rdi\n    syscall\n",
+  "website": "https://www.nasm.us"
+}

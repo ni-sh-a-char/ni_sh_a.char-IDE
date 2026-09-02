@@ -1,0 +1,25 @@
+{
+  "$schema": "./schema.json",
+  "id": "vala",
+  "name": "Vala",
+  "aliases": [],
+  "extensions": [
+    ".vala"
+  ],
+  "comment": "//",
+  "highlight": "vala",
+  "image": "esolang/vala",
+  "compile": [
+    [
+      "valac",
+      "{file}",
+      "-o",
+      "{bin}"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "void main() {\n    print(\"Hello from Vala!\\n\");\n}\n",
+  "website": "https://vala.dev"
+}

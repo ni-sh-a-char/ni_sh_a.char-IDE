@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema.json",
+  "id": "fish",
+  "name": "Fish",
+  "aliases": [],
+  "extensions": [
+    ".fish"
+  ],
+  "comment": "#",
+  "highlight": "shell",
+  "image": "alpine:latest",
+  "setup": [
+    [
+      "apk",
+      "add",
+      "--no-cache",
+      "fish"
+    ]
+  ],
+  "run": [
+    "fish",
+    "{file}"
+  ],
+  "template": "echo \"Hello from Fish!\"\n",
+  "website": "https://fishshell.com"
+}

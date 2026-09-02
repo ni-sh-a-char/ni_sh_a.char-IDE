@@ -1,0 +1,28 @@
+{
+  "$schema": "./schema.json",
+  "id": "objectivec",
+  "name": "Objective-C",
+  "aliases": [
+    "objc"
+  ],
+  "extensions": [
+    ".m"
+  ],
+  "comment": "//",
+  "highlight": "objectivec",
+  "image": "gcc:14",
+  "compile": [
+    [
+      "gcc",
+      "{file}",
+      "-o",
+      "{bin}",
+      "-lobjc"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "#import <stdio.h>\n\nint main(void) {\n    printf(\"Hello from Objective-C!\\n\");\n    return 0;\n}\n",
+  "website": "https://developer.apple.com/documentation/objectivec"
+}

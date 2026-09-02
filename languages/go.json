@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "go",
+  "name": "Go",
+  "aliases": [
+    "golang"
+  ],
+  "extensions": [
+    ".go"
+  ],
+  "comment": "//",
+  "highlight": "go",
+  "image": "golang:1-alpine",
+  "run": [
+    "go",
+    "run",
+    "{file}"
+  ],
+  "template": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Hello from Go!\")\n}\n",
+  "website": "https://go.dev"
+}

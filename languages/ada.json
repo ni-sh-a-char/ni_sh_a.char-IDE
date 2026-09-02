@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema.json",
+  "id": "ada",
+  "name": "Ada",
+  "aliases": [],
+  "extensions": [
+    ".adb",
+    ".ads"
+  ],
+  "comment": "--",
+  "highlight": "ada",
+  "image": "esolang/ada-gnat",
+  "compile": [
+    [
+      "gnatmake",
+      "{file}",
+      "-o",
+      "{bin}"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "with Ada.Text_IO;\n\nprocedure Main is\nbegin\n   Ada.Text_IO.Put_Line (\"Hello from Ada!\");\nend Main;\n",
+  "website": "https://www.adaic.org"
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "crystal",
+  "name": "Crystal",
+  "aliases": [
+    "cr"
+  ],
+  "extensions": [
+    ".cr"
+  ],
+  "comment": "#",
+  "highlight": "crystal",
+  "image": "crystallang/crystal:latest-alpine",
+  "run": [
+    "crystal",
+    "run",
+    "{file}"
+  ],
+  "template": "puts \"Hello from Crystal!\"\n",
+  "website": "https://crystal-lang.org"
+}

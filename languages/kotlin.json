@@ -1,0 +1,22 @@
+{
+  "$schema": "./schema.json",
+  "id": "kotlin",
+  "name": "Kotlin",
+  "aliases": [
+    "kt"
+  ],
+  "extensions": [
+    ".kt",
+    ".kts"
+  ],
+  "comment": "//",
+  "highlight": "kotlin",
+  "image": "zenika/kotlin",
+  "run": [
+    "kotlinc",
+    "-script",
+    "{file}"
+  ],
+  "template": "println(\"Hello from Kotlin!\")\n",
+  "website": "https://kotlinlang.org"
+}

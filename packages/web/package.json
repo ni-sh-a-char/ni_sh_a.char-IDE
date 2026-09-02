@@ -1,0 +1,67 @@
+{
+  "name": "@nishachar/ide",
+  "version": "2.0.0",
+  "description": "Run any language, anywhere. An embeddable polyglot IDE web component that works in React, Vue, Svelte, Angular or plain HTML.",
+  "license": "Apache-2.0",
+  "author": "Piyush Mishra <piyushmishra.professional@gmail.com>",
+  "homepage": "https://ni-sh-a-char.github.io/ni_sh_a.char-IDE/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ni-sh-a-char/ni_sh_a.char-IDE.git",
+    "directory": "packages/web"
+  },
+  "bugs": "https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/issues",
+  "type": "module",
+  "main": "./dist/nishachar-ide.js",
+  "module": "./dist/nishachar-ide.js",
+  "unpkg": "./dist/nishachar-ide.iife.js",
+  "jsdelivr": "./dist/nishachar-ide.iife.js",
+  "exports": {
+    ".": {
+      "import": "./dist/nishachar-ide.js",
+      "default": "./dist/nishachar-ide.iife.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ide",
+    "code-editor",
+    "web-component",
+    "custom-element",
+    "codemirror",
+    "polyglot",
+    "playground",
+    "code-runner",
+    "wasm",
+    "pyodide",
+    "she-lang",
+    "embeddable"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "prepublishOnly": "node build.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.20.3",
+    "@codemirror/commands": "^6.6.0",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-python": "^6.1.6",
+    "@codemirror/language": "^6.10.2",
+    "@codemirror/legacy-modes": "^6.4.0",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.28.0",
+    "@lezer/highlight": "^1.2.3",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
+    "codemirror": "^6.0.1"
+  }
+}

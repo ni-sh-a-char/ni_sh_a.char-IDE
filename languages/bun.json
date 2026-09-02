@@ -1,0 +1,19 @@
+{
+  "$schema": "./schema.json",
+  "id": "bun",
+  "name": "Bun",
+  "aliases": [],
+  "extensions": [
+    ".bun.ts"
+  ],
+  "comment": "//",
+  "highlight": "typescript",
+  "image": "oven/bun:alpine",
+  "run": [
+    "bun",
+    "run",
+    "{file}"
+  ],
+  "template": "console.log(\"Hello from Bun!\");\n",
+  "website": "https://bun.sh"
+}

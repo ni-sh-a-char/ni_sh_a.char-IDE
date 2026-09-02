@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema.json",
+  "id": "prolog",
+  "name": "Prolog",
+  "aliases": [
+    "swipl"
+  ],
+  "extensions": [
+    ".pl",
+    ".pro"
+  ],
+  "comment": "%",
+  "highlight": "prolog",
+  "image": "swipl:9",
+  "run": [
+    "swipl",
+    "-q",
+    "-g",
+    "main",
+    "-t",
+    "halt",
+    "{file}"
+  ],
+  "template": "main :- write(\"Hello from Prolog!\"), nl.\n",
+  "website": "https://www.swi-prolog.org"
+}

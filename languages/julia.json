@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "julia",
+  "name": "Julia",
+  "aliases": [
+    "jl"
+  ],
+  "extensions": [
+    ".jl"
+  ],
+  "comment": "#",
+  "highlight": "julia",
+  "image": "julia:1-alpine",
+  "run": [
+    "julia",
+    "{file}"
+  ],
+  "template": "println(\"Hello from Julia!\")\n",
+  "website": "https://julialang.org"
+}

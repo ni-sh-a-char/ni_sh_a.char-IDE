@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "ocaml",
+  "name": "OCaml",
+  "aliases": [
+    "ml"
+  ],
+  "extensions": [
+    ".ml"
+  ],
+  "comment": "(*",
+  "highlight": "ocaml",
+  "image": "ocaml/opam:alpine",
+  "run": [
+    "ocaml",
+    "{file}"
+  ],
+  "template": "print_endline \"Hello from OCaml!\"\n",
+  "website": "https://ocaml.org"
+}

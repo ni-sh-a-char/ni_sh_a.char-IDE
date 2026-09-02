@@ -1,0 +1,31 @@
+{
+  "$schema": "./schema.json",
+  "id": "cpp",
+  "name": "C++",
+  "aliases": [
+    "c++",
+    "cxx"
+  ],
+  "extensions": [
+    ".cpp",
+    ".cc",
+    ".cxx"
+  ],
+  "comment": "//",
+  "highlight": "cpp",
+  "image": "gcc:14",
+  "compile": [
+    [
+      "g++",
+      "-std=c++20",
+      "{file}",
+      "-o",
+      "{bin}"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "#include <iostream>\n\nint main() {\n    std::cout << \"Hello from C++!\" << std::endl;\n}\n",
+  "website": "https://isocpp.org"
+}

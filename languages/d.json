@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "d",
+  "name": "D",
+  "aliases": [
+    "dlang"
+  ],
+  "extensions": [
+    ".d"
+  ],
+  "comment": "//",
+  "highlight": "d",
+  "image": "dlang2/dmd-ubuntu",
+  "run": [
+    "rdmd",
+    "{file}"
+  ],
+  "template": "import std.stdio;\n\nvoid main() {\n    writeln(\"Hello from D!\");\n}\n",
+  "website": "https://dlang.org"
+}

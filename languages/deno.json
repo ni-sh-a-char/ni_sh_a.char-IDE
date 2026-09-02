@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "deno",
+  "name": "Deno",
+  "aliases": [],
+  "extensions": [
+    ".deno.ts"
+  ],
+  "comment": "//",
+  "highlight": "typescript",
+  "image": "denoland/deno:alpine",
+  "run": [
+    "deno",
+    "run",
+    "--allow-all",
+    "{file}"
+  ],
+  "template": "console.log(\"Hello from Deno!\");\n",
+  "website": "https://deno.com"
+}

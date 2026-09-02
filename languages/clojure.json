@@ -1,0 +1,22 @@
+{
+  "$schema": "./schema.json",
+  "id": "clojure",
+  "name": "Clojure",
+  "aliases": [
+    "clj"
+  ],
+  "extensions": [
+    ".clj",
+    ".cljs"
+  ],
+  "comment": ";;",
+  "highlight": "clojure",
+  "image": "clojure:temurin-21-tools-deps",
+  "run": [
+    "clojure",
+    "-M",
+    "{file}"
+  ],
+  "template": "(println \"Hello from Clojure!\")\n",
+  "website": "https://clojure.org"
+}

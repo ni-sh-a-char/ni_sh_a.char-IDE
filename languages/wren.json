@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "id": "wren",
+  "name": "Wren",
+  "aliases": [],
+  "extensions": [
+    ".wren"
+  ],
+  "comment": "//",
+  "highlight": "wren",
+  "image": "esolang/wren",
+  "run": [
+    "wren",
+    "{file}"
+  ],
+  "template": "System.print(\"Hello from Wren!\")\n",
+  "website": "https://wren.io"
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "perl",
+  "name": "Perl",
+  "aliases": [
+    "pl"
+  ],
+  "extensions": [
+    ".pl",
+    ".pm"
+  ],
+  "comment": "#",
+  "highlight": "perl",
+  "image": "perl:5-slim",
+  "run": [
+    "perl",
+    "{file}"
+  ],
+  "template": "print \"Hello from Perl!\\n\";\n",
+  "website": "https://www.perl.org"
+}

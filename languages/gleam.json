@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "id": "gleam",
+  "name": "Gleam",
+  "aliases": [],
+  "extensions": [
+    ".gleam"
+  ],
+  "comment": "//",
+  "highlight": "gleam",
+  "image": "ghcr.io/gleam-lang/gleam:v1.4.1-erlang-alpine",
+  "run": [
+    "gleam",
+    "run"
+  ],
+  "template": "import gleam/io\n\npub fn main() {\n  io.println(\"Hello from Gleam!\")\n}\n",
+  "website": "https://gleam.run"
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "./schema.json",
+  "id": "she",
+  "name": "SHE",
+  "aliases": [
+    "she-lang"
+  ],
+  "extensions": [
+    ".she"
+  ],
+  "comment": "#",
+  "highlight": "she",
+  "image": "python:3.12-slim",
+  "setup": [
+    [
+      "pip",
+      "install",
+      "--quiet",
+      "she-lang"
+    ]
+  ],
+  "run": [
+    "python",
+    "-m",
+    "she",
+    "run",
+    "{file}"
+  ],
+  "browser": "pyodide",
+  "template": "say \"Hello from SHE!\"\n\nlet name = \"world\"\nsay \"Hello, {name}!\"\n",
+  "website": "https://github.com/ni-sh-a-char/SHE"
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "./schema.json",
+  "id": "java",
+  "name": "Java",
+  "aliases": [],
+  "extensions": [
+    ".java"
+  ],
+  "comment": "//",
+  "highlight": "java",
+  "image": "eclipse-temurin:21",
+  "filename": "Main.java",
+  "run": [
+    "java",
+    "{file}"
+  ],
+  "template": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello from Java!\");\n    }\n}\n",
+  "website": "https://openjdk.org"
+}

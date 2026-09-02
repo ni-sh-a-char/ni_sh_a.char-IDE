@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "id": "lua",
+  "name": "Lua",
+  "aliases": [],
+  "extensions": [
+    ".lua"
+  ],
+  "comment": "--",
+  "highlight": "lua",
+  "image": "nickblah/lua:5.4-alpine",
+  "run": [
+    "lua",
+    "{file}"
+  ],
+  "template": "print(\"Hello from Lua!\")\n",
+  "website": "https://www.lua.org"
+}

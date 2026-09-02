@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema.json",
+  "id": "c",
+  "name": "C",
+  "aliases": [],
+  "extensions": [
+    ".c"
+  ],
+  "comment": "//",
+  "highlight": "c",
+  "image": "gcc:14",
+  "compile": [
+    [
+      "gcc",
+      "{file}",
+      "-o",
+      "{bin}",
+      "-lm"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "#include <stdio.h>\n\nint main(void) {\n    printf(\"Hello from C!\\n\");\n    return 0;\n}\n",
+  "website": "https://en.cppreference.com/w/c"
+}

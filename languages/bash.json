@@ -1,0 +1,22 @@
+{
+  "$schema": "./schema.json",
+  "id": "bash",
+  "name": "Bash",
+  "aliases": [
+    "sh",
+    "shell"
+  ],
+  "extensions": [
+    ".sh",
+    ".bash"
+  ],
+  "comment": "#",
+  "highlight": "shell",
+  "image": "bash:5",
+  "run": [
+    "bash",
+    "{file}"
+  ],
+  "template": "echo \"Hello from Bash!\"\nuname -a\n",
+  "website": "https://www.gnu.org/software/bash/"
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "nim",
+  "name": "Nim",
+  "aliases": [],
+  "extensions": [
+    ".nim"
+  ],
+  "comment": "#",
+  "highlight": "nim",
+  "image": "nimlang/nim:alpine",
+  "run": [
+    "nim",
+    "r",
+    "--hints:off",
+    "{file}"
+  ],
+  "template": "echo \"Hello from Nim!\"\n",
+  "website": "https://nim-lang.org"
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "vlang",
+  "name": "V",
+  "aliases": [
+    "v"
+  ],
+  "extensions": [
+    ".v"
+  ],
+  "comment": "//",
+  "highlight": "vlang",
+  "image": "thevlang/vlang:alpine",
+  "run": [
+    "v",
+    "run",
+    "{file}"
+  ],
+  "template": "fn main() {\n\tprintln(\"Hello from V!\")\n}\n",
+  "website": "https://vlang.io"
+}

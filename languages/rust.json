@@ -1,0 +1,27 @@
+{
+  "$schema": "./schema.json",
+  "id": "rust",
+  "name": "Rust",
+  "aliases": [
+    "rs"
+  ],
+  "extensions": [
+    ".rs"
+  ],
+  "comment": "//",
+  "highlight": "rust",
+  "image": "rust:1-slim",
+  "compile": [
+    [
+      "rustc",
+      "{file}",
+      "-o",
+      "{bin}"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "fn main() {\n    println!(\"Hello from Rust!\");\n}\n",
+  "website": "https://www.rust-lang.org"
+}

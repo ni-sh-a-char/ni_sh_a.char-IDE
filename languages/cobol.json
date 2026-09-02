@@ -1,0 +1,29 @@
+{
+  "$schema": "./schema.json",
+  "id": "cobol",
+  "name": "COBOL",
+  "aliases": [
+    "cob"
+  ],
+  "extensions": [
+    ".cob",
+    ".cbl"
+  ],
+  "comment": "*>",
+  "highlight": "cobol",
+  "image": "esolang/cobol-gnucobol",
+  "compile": [
+    [
+      "cobc",
+      "-x",
+      "{file}",
+      "-o",
+      "{bin}"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "IDENTIFICATION DIVISION.\nPROGRAM-ID. HELLO.\nPROCEDURE DIVISION.\n    DISPLAY \"Hello from COBOL!\".\n    STOP RUN.\n",
+  "website": "https://gnucobol.sourceforge.io"
+}

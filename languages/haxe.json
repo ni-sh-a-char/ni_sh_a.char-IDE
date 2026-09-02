@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "haxe",
+  "name": "Haxe",
+  "aliases": [],
+  "extensions": [
+    ".hx"
+  ],
+  "comment": "//",
+  "highlight": "haxe",
+  "image": "haxe:4-alpine",
+  "filename": "Main.hx",
+  "run": [
+    "haxe",
+    "--run",
+    "{stem}"
+  ],
+  "template": "class Main {\n    static function main() {\n        trace(\"Hello from Haxe!\");\n    }\n}\n",
+  "website": "https://haxe.org"
+}

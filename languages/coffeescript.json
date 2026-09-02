@@ -1,0 +1,28 @@
+{
+  "$schema": "./schema.json",
+  "id": "coffeescript",
+  "name": "CoffeeScript",
+  "aliases": [
+    "coffee"
+  ],
+  "extensions": [
+    ".coffee"
+  ],
+  "comment": "#",
+  "highlight": "coffeescript",
+  "image": "node:22-alpine",
+  "setup": [
+    [
+      "npm",
+      "i",
+      "-g",
+      "coffeescript"
+    ]
+  ],
+  "run": [
+    "coffee",
+    "{file}"
+  ],
+  "template": "console.log \"Hello from CoffeeScript!\"\n",
+  "website": "https://coffeescript.org"
+}

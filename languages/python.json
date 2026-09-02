@@ -1,0 +1,22 @@
+{
+  "$schema": "./schema.json",
+  "id": "python",
+  "name": "Python",
+  "aliases": [
+    "py",
+    "python3"
+  ],
+  "extensions": [
+    ".py"
+  ],
+  "comment": "#",
+  "highlight": "python",
+  "image": "python:3.12-slim",
+  "run": [
+    "python",
+    "{file}"
+  ],
+  "browser": "pyodide",
+  "template": "print(\"Hello from Python!\")\n",
+  "website": "https://www.python.org"
+}

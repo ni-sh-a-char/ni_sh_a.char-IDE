@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "nushell",
+  "name": "Nushell",
+  "aliases": [
+    "nu"
+  ],
+  "extensions": [
+    ".nu"
+  ],
+  "comment": "#",
+  "highlight": "shell",
+  "image": "ghcr.io/nushell/nushell:latest-alpine",
+  "run": [
+    "nu",
+    "{file}"
+  ],
+  "template": "print \"Hello from Nushell!\"\n",
+  "website": "https://www.nushell.sh"
+}

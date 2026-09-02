@@ -1,0 +1,28 @@
+{
+  "$schema": "./schema.json",
+  "id": "typescript",
+  "name": "TypeScript",
+  "aliases": [
+    "ts"
+  ],
+  "extensions": [
+    ".ts"
+  ],
+  "comment": "//",
+  "highlight": "typescript",
+  "image": "node:22-alpine",
+  "setup": [
+    [
+      "npm",
+      "i",
+      "-g",
+      "tsx"
+    ]
+  ],
+  "run": [
+    "tsx",
+    "{file}"
+  ],
+  "template": "const greet = (who: string): string => `Hello from ${who}!`;\nconsole.log(greet(\"TypeScript\"));\n",
+  "website": "https://www.typescriptlang.org"
+}

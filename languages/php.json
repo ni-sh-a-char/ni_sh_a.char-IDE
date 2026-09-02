@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "id": "php",
+  "name": "PHP",
+  "aliases": [],
+  "extensions": [
+    ".php"
+  ],
+  "comment": "//",
+  "highlight": "php",
+  "image": "php:8.3-cli",
+  "run": [
+    "php",
+    "{file}"
+  ],
+  "template": "<?php\necho \"Hello from PHP!\\n\";\n",
+  "website": "https://www.php.net"
+}

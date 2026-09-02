@@ -1,0 +1,23 @@
+{
+  "$schema": "./schema.json",
+  "id": "javascript",
+  "name": "JavaScript",
+  "aliases": [
+    "js",
+    "node"
+  ],
+  "extensions": [
+    ".js",
+    ".mjs"
+  ],
+  "comment": "//",
+  "highlight": "javascript",
+  "image": "node:22-alpine",
+  "run": [
+    "node",
+    "{file}"
+  ],
+  "browser": "native",
+  "template": "console.log(\"Hello from JavaScript!\");\n",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+}

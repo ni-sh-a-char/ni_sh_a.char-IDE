@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "solidity",
+  "name": "Solidity",
+  "aliases": [
+    "sol"
+  ],
+  "extensions": [
+    ".sol"
+  ],
+  "comment": "//",
+  "highlight": "solidity",
+  "image": "ethereum/solc:stable",
+  "run": [
+    "solc",
+    "--bin",
+    "{file}"
+  ],
+  "template": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ncontract Hello {\n    function greet() public pure returns (string memory) {\n        return \"Hello from Solidity!\";\n    }\n}\n",
+  "website": "https://soliditylang.org"
+}

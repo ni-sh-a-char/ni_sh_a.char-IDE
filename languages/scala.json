@@ -1,0 +1,19 @@
+{
+  "$schema": "./schema.json",
+  "id": "scala",
+  "name": "Scala",
+  "aliases": [],
+  "extensions": [
+    ".scala",
+    ".sc"
+  ],
+  "comment": "//",
+  "highlight": "scala",
+  "image": "sbtscala/scala-sbt:eclipse-temurin-21.0.2_13_1.9.9_3.4.0",
+  "run": [
+    "scala",
+    "{file}"
+  ],
+  "template": "@main def hello(): Unit = println(\"Hello from Scala!\")\n",
+  "website": "https://www.scala-lang.org"
+}

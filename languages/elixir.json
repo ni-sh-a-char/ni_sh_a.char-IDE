@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "elixir",
+  "name": "Elixir",
+  "aliases": [
+    "ex"
+  ],
+  "extensions": [
+    ".ex",
+    ".exs"
+  ],
+  "comment": "#",
+  "highlight": "elixir",
+  "image": "elixir:1.16-alpine",
+  "run": [
+    "elixir",
+    "{file}"
+  ],
+  "template": "IO.puts(\"Hello from Elixir!\")\n",
+  "website": "https://elixir-lang.org"
+}

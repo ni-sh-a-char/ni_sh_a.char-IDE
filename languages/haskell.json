@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "haskell",
+  "name": "Haskell",
+  "aliases": [
+    "hs"
+  ],
+  "extensions": [
+    ".hs"
+  ],
+  "comment": "--",
+  "highlight": "haskell",
+  "image": "haskell:9.6-slim",
+  "run": [
+    "runghc",
+    "{file}"
+  ],
+  "template": "main :: IO ()\nmain = putStrLn \"Hello from Haskell!\"\n",
+  "website": "https://www.haskell.org"
+}

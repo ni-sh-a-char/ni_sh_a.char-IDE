@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "id": "groovy",
+  "name": "Groovy",
+  "aliases": [],
+  "extensions": [
+    ".groovy"
+  ],
+  "comment": "//",
+  "highlight": "groovy",
+  "image": "groovy:jre21",
+  "run": [
+    "groovy",
+    "{file}"
+  ],
+  "template": "println \"Hello from Groovy!\"\n",
+  "website": "https://groovy-lang.org"
+}

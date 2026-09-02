@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema.json",
+  "id": "pascal",
+  "name": "Pascal",
+  "aliases": [
+    "pas"
+  ],
+  "extensions": [
+    ".pas"
+  ],
+  "comment": "//",
+  "highlight": "pascal",
+  "image": "esolang/fpc",
+  "compile": [
+    [
+      "fpc",
+      "-o{bin}",
+      "{file}"
+    ]
+  ],
+  "run": [
+    "{bin}"
+  ],
+  "template": "program Hello;\nbegin\n  writeln('Hello from Pascal!');\nend.\n",
+  "website": "https://www.freepascal.org"
+}

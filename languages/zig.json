@@ -1,0 +1,19 @@
+{
+  "$schema": "./schema.json",
+  "id": "zig",
+  "name": "Zig",
+  "aliases": [],
+  "extensions": [
+    ".zig"
+  ],
+  "comment": "//",
+  "highlight": "zig",
+  "image": "euantorano/zig:0.13.0",
+  "run": [
+    "zig",
+    "run",
+    "{file}"
+  ],
+  "template": "const std = @import(\"std\");\n\npub fn main() void {\n    std.debug.print(\"Hello from Zig!\\n\", .{});\n}\n",
+  "website": "https://ziglang.org"
+}

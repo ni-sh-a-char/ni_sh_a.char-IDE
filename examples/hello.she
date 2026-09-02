@@ -1,0 +1,5 @@
+# SHE reads like English. Run me with:  nishachar run examples/hello.she
+say "Hello from SHE!"
+
+let name = "world"
+say "Hello, {name}!"

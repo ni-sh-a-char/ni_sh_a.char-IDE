@@ -1,0 +1,20 @@
+{
+  "$schema": "./schema.json",
+  "id": "racket",
+  "name": "Racket",
+  "aliases": [
+    "rkt"
+  ],
+  "extensions": [
+    ".rkt"
+  ],
+  "comment": ";;",
+  "highlight": "racket",
+  "image": "racket/racket:8.12-full",
+  "run": [
+    "racket",
+    "{file}"
+  ],
+  "template": "#lang racket\n(displayln \"Hello from Racket!\")\n",
+  "website": "https://racket-lang.org"
+}

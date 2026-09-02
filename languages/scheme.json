@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema.json",
+  "id": "scheme",
+  "name": "Scheme",
+  "aliases": [
+    "scm"
+  ],
+  "extensions": [
+    ".scm",
+    ".ss"
+  ],
+  "comment": ";;",
+  "highlight": "scheme",
+  "image": "schemers/guile",
+  "run": [
+    "guile",
+    "{file}"
+  ],
+  "template": "(display \"Hello from Scheme!\")\n(newline)\n",
+  "website": "https://www.scheme.org"
+}

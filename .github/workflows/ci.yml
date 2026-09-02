@@ -1,0 +1,168 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  registry:
+    name: Validate the language registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install jsonschema
+      - name: Every language file must match the schema
+        run: |
+          python - <<'PY'
+          import json, sys
+          from pathlib import Path
+          from jsonschema import Draft7Validator
+
+          schema = json.loads(Path("languages/schema.json").read_text(encoding="utf-8"))
+          validator = Draft7Validator(schema)
+
+          failures = 0
+          files = sorted(p for p in Path("languages").glob("*.json") if p.name != "schema.json")
+          for path in files:
+              data = json.loads(path.read_text(encoding="utf-8"))
+              for error in sorted(validator.iter_errors(data), key=lambda e: e.path):
+                  location = "/".join(str(p) for p in error.path) or "(root)"
+                  print(f"::error file={path}::{location}: {error.message}")
+                  failures += 1
+              if data.get("id") != path.stem:
+                  print(f"::error file={path}::id {data.get('id')!r} must match the filename")
+                  failures += 1
+
+          print(f"checked {len(files)} language definitions")
+          sys.exit(1 if failures else 0)
+          PY
+
+  test:
+    name: Test · ${{ matrix.os }} · py${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.10", "3.12", "3.13"]
+        exclude:
+          - { os: macos-latest, python: "3.10" }
+          - { os: windows-latest, python: "3.10" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: pip install -e ".[dev]" she-lang
+      - name: Lint
+        run: python -m ruff check packages/core tests
+      - name: Tests
+        run: python -m pytest -q
+      - name: The CLI must actually work
+        shell: bash
+        run: |
+          nishachar --version
+          nishachar languages | tail -2
+          nishachar run examples/hello.she
+          nishachar run examples/hello.py
+          test "$(nishachar run -l python -c 'print(6*7)')" = "42"
+
+  web:
+    name: Build the web component
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: packages/web/package-lock.json
+      - run: npm ci
+        working-directory: packages/web
+      - run: npm run build
+        working-directory: packages/web
+      - name: The bundle must define the element
+        run: |
+          test -f packages/web/dist/nishachar-ide.js
+          test -f packages/web/dist/nishachar-ide.iife.js
+          test -f packages/core/nishachar/static/index.html
+          grep -q "nishachar-ide" packages/web/dist/nishachar-ide.iife.js
+          echo "gzipped: $(gzip -c packages/web/dist/nishachar-ide.js | wc -c) bytes"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-bundle
+          path: packages/web/dist
+          retention-days: 7
+
+  docker:
+    name: Sandboxed runner (integration)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Run real code in a real container
+        run: |
+          set -euo pipefail
+          docker pull -q python:3.12-slim
+          python - <<'PY'
+          import nishachar
+          from nishachar.runners import DockerRunner
+
+          runner = DockerRunner()
+          assert runner.available(), "Docker should be available on this runner"
+
+          language = nishachar.registry.require("python")
+          result = runner.run('print("sandboxed")', language, timeout=60)
+          print("stdout:", result.stdout.strip(), "| exit:", result.exit_code)
+          assert result.stdout.strip() == "sandboxed", result
+
+          # The sandbox must genuinely have no network.
+          probe = runner.run(
+              "import socket;"
+              "socket.setdefaulttimeout(5);"
+              "socket.create_connection(('1.1.1.1', 53))",
+              language,
+              timeout=60,
+          )
+          assert probe.exit_code != 0, "containers must not reach the network"
+          print("network isolation: confirmed")
+          PY
+
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    needs: [test, web]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build twine
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: The registry must be inside the wheel
+        run: |
+          python -m zipfile -l dist/*.whl | grep -q "nishachar/languages/she.json"
+          echo "registry shipped in the wheel"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: dist
+          retention-days: 7

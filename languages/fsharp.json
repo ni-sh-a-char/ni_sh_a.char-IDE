@@ -1,0 +1,22 @@
+{
+  "$schema": "./schema.json",
+  "id": "fsharp",
+  "name": "F#",
+  "aliases": [
+    "fs"
+  ],
+  "extensions": [
+    ".fsx",
+    ".fs"
+  ],
+  "comment": "//",
+  "highlight": "fsharp",
+  "image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "run": [
+    "dotnet",
+    "fsi",
+    "{file}"
+  ],
+  "template": "printfn \"Hello from F#!\"\n",
+  "website": "https://fsharp.org"
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "id": "tcl",
+  "name": "Tcl",
+  "aliases": [],
+  "extensions": [
+    ".tcl"
+  ],
+  "comment": "#",
+  "highlight": "tcl",
+  "image": "tcl:8.6",
+  "run": [
+    "tclsh",
+    "{file}"
+  ],
+  "template": "puts \"Hello from Tcl!\"\n",
+  "website": "https://www.tcl.tk"
+}

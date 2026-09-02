@@ -1,0 +1,19 @@
+{
+  "$schema": "./schema.json",
+  "id": "dart",
+  "name": "Dart",
+  "aliases": [],
+  "extensions": [
+    ".dart"
+  ],
+  "comment": "//",
+  "highlight": "dart",
+  "image": "dart:stable",
+  "run": [
+    "dart",
+    "run",
+    "{file}"
+  ],
+  "template": "void main() {\n  print(\"Hello from Dart!\");\n}\n",
+  "website": "https://dart.dev"
+}

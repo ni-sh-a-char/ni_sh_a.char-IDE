@@ -1,0 +1,22 @@
+{
+  "$schema": "./schema.json",
+  "id": "powershell",
+  "name": "PowerShell",
+  "aliases": [
+    "pwsh",
+    "ps1"
+  ],
+  "extensions": [
+    ".ps1"
+  ],
+  "comment": "#",
+  "highlight": "powershell",
+  "image": "mcr.microsoft.com/powershell:latest",
+  "run": [
+    "pwsh",
+    "-File",
+    "{file}"
+  ],
+  "template": "Write-Output \"Hello from PowerShell!\"\n",
+  "website": "https://learn.microsoft.com/powershell/"
+}

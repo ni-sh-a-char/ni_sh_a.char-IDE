@@ -1,0 +1,31 @@
+{
+  "$schema": "./schema.json",
+  "id": "csharp",
+  "name": "C#",
+  "aliases": [
+    "cs",
+    "dotnet"
+  ],
+  "extensions": [
+    ".cs"
+  ],
+  "comment": "//",
+  "highlight": "csharp",
+  "image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "setup": [
+    [
+      "dotnet",
+      "tool",
+      "install",
+      "-g",
+      "dotnet-script"
+    ]
+  ],
+  "run": [
+    "dotnet",
+    "script",
+    "{file}"
+  ],
+  "template": "Console.WriteLine(\"Hello from C#!\");\n",
+  "website": "https://learn.microsoft.com/dotnet/csharp/"
+}
