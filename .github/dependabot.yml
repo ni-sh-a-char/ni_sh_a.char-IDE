@@ -15,6 +15,10 @@ updates:
     groups:
       codemirror:
         patterns: ["@codemirror/*", "@lezer/*", "codemirror"]
+      # xterm and its addons pin each other with peer ranges, so bumping one
+      # alone can never install. They have to move together.
+      xterm:
+        patterns: ["@xterm/*"]
 
   - package-ecosystem: pip
     directory: /
