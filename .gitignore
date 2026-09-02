@@ -26,3 +26,13 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Dart
+.dart_tool/
+packages/dart/pubspec.lock
+packages/dart/.packages
+
+# JVM / Maven
+target/
+packages/kotlin/cp.txt
+*.class
