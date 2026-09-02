@@ -47,7 +47,7 @@
     "prepublishOnly": "node build.mjs"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0"
+    "esbuild": "^0.28.2"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
