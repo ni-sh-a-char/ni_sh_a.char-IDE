@@ -86,8 +86,15 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          set -euo pipefail
           if [ -z "${NODE_AUTH_TOKEN}" ]; then
-            echo "NPM_TOKEN is not set -- skipping publish."
+            echo "::notice::NPM_TOKEN is not set -- skipping npm."
+            exit 0
+          fi
+          VERSION=$(node -p "require('./package.json').version")
+          # Re-running a release must not fail on work already done.
+          if npm view "@nishachar/ide@${VERSION}" version >/dev/null 2>&1; then
+            echo "::notice::@nishachar/ide@${VERSION} is already published -- skipping."
             exit 0
           fi
           npm publish --access public --provenance
@@ -168,8 +175,22 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Deploy signed artifacts
+      - name: Skip if this version is already on Central
+        id: exists
         if: steps.gate.outputs.ready == 'true'
+        run: |
+          set -euo pipefail
+          VERSION=$(mvn -B -q -DforceStdout help:evaluate -Dexpression=project.version)
+          URL="https://repo1.maven.org/maven2/io/github/ni-sh-a-char/nishachar-ide/${VERSION}/nishachar-ide-${VERSION}.pom"
+          if [ "$(curl -s -o /dev/null -w '%{http_code}' "$URL")" = "200" ]; then
+            echo "::notice::nishachar-ide ${VERSION} is already on Maven Central -- skipping."
+            echo "todo=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "todo=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy signed artifacts
+        if: steps.gate.outputs.ready == 'true' && steps.exists.outputs.todo == 'true'
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}

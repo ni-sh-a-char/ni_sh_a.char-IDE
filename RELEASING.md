@@ -8,13 +8,14 @@ one at a time.
 | Registry | Package | Auth | Status |
 |:--|:--|:--|:--|
 | PyPI | `nishachar-ide` | OIDC + `vars.PUBLISH_PYPI` | ✅ working |
-| npm | `@nishachar/ide` | `NPM_TOKEN` | needs one-time setup |
-| pub.dev | `nishachar_ide` | OIDC + `vars.PUBLISH_PUB` | published manually; automation optional |
+| npm | `@nishachar/ide` | `NPM_TOKEN` | ✅ working |
+| pub.dev | `nishachar_ide` | OIDC + `vars.PUBLISH_PUB` | ✅ published; automation optional |
 | Maven Central | `io.github.ni-sh-a-char:nishachar-ide` | token + GPG | ✅ working |
 | GHCR | `ghcr.io/ni-sh-a-char/nishachar-ide` | built-in | ✅ working |
 
-Each job **skips** when its credentials are absent rather than failing, so a
-release is green from the first tag and turns on one registry at a time. The
+Each job **skips** when its credentials are absent, and also when the version
+is already published, rather than failing. Re-running a release is therefore
+always safe: it publishes only what is genuinely missing. The
 two OIDC registries have no secret to probe, so they are enabled with a
 repository variable (**Settings → Secrets and variables → Actions →
 Variables**) once their one-time setup is done:
