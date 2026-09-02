@@ -7,11 +7,22 @@ one at a time.
 
 | Registry | Package | Auth | Status |
 |:--|:--|:--|:--|
-| PyPI | `nishachar-ide` | OIDC (no token) | needs one-time setup |
+| PyPI | `nishachar-ide` | OIDC + `vars.PUBLISH_PYPI` | needs one-time setup |
 | npm | `@nishachar/ide` | `NPM_TOKEN` | needs one-time setup |
-| pub.dev | `nishachar_ide` | OIDC (no token) | needs one-time setup |
+| pub.dev | `nishachar_ide` | OIDC + `vars.PUBLISH_PUB` | needs one-time setup |
 | Maven Central | `io.github.ni-sh-a-char:nishachar-ide` | token + GPG | needs one-time setup |
 | GHCR | `ghcr.io/ni-sh-a-char/nishachar-ide` | built-in | ✅ working |
+
+Each job **skips** when its credentials are absent rather than failing, so a
+release is green from the first tag and turns on one registry at a time. The
+two OIDC registries have no secret to probe, so they are enabled with a
+repository variable (**Settings → Secrets and variables → Actions →
+Variables**) once their one-time setup is done:
+
+| Variable | Set to `true` after |
+|:--|:--|
+| `PUBLISH_PYPI` | the pending publisher exists on pypi.org (step 1) |
+| `PUBLISH_PUB` | automated publishing is enabled on pub.dev (step 3) |
 
 ---
 
@@ -40,7 +51,8 @@ No API token to create, store, rotate, or leak.
    | Workflow name | `release.yml` |
    | Environment name | `release` |
 
-Nothing else. The next tagged release claims the name and publishes.
+Then set the repository variable `PUBLISH_PYPI` to `true`. The next tagged
+release claims the name and publishes.
 
 ### 2. npm
 
@@ -67,6 +79,7 @@ Then enable automation for every release after that:
 1. <https://pub.dev/packages/nishachar_ide/admin>
 2. **Automated publishing → Enable publishing from GitHub Actions**
 3. Repository: `ni-sh-a-char/ni_sh_a.char-IDE`, tag pattern: `v{{version}}`
+4. Set the repository variable `PUBLISH_PUB` to `true`.
 
 ### 4. Maven Central
 

@@ -21,21 +21,42 @@ jobs:
       id-token: write # Trusted Publishing -- no API token to store or leak.
     steps:
       - uses: actions/checkout@v4
+
+      # Trusted Publishing uses OIDC, so there is no secret to probe. Set the
+      # repository variable PUBLISH_PYPI=true once the pending publisher exists
+      # on pypi.org -- see RELEASING.md.
+      - name: Skip until Trusted Publishing is configured
+        id: gate
+        run: |
+          if [ "${{ vars.PUBLISH_PYPI }}" != "true" ]; then
+            echo "::notice::PUBLISH_PYPI is not 'true' -- skipping PyPI."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ready == 'true'
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: packages/web/package-lock.json
       - name: Build the IDE shell into the package
+        if: steps.gate.outputs.ready == 'true'
         working-directory: packages/web
         run: npm ci && npm run build
       - uses: actions/setup-python@v5
+        if: steps.gate.outputs.ready == 'true'
         with:
           python-version: "3.12"
-      - run: pip install build twine
-      - run: python -m build
-      - run: python -m twine check dist/*
+      - if: steps.gate.outputs.ready == 'true'
+        run: pip install build twine
+      - if: steps.gate.outputs.ready == 'true'
+        run: python -m build
+      - if: steps.gate.outputs.ready == 'true'
+        run: python -m twine check dist/*
       - uses: pypa/gh-action-pypi-publish@release/v1
+        if: steps.gate.outputs.ready == 'true'
         with:
           skip-existing: true
 
@@ -77,12 +98,30 @@ jobs:
         working-directory: packages/dart
     steps:
       - uses: actions/checkout@v4
+
+      # pub.dev only allows automated publishing for a package that already
+      # exists, so the first publish is manual. Set PUBLISH_PUB=true after
+      # enabling automated publishing -- see RELEASING.md.
+      - name: Skip until automated publishing is enabled
+        id: gate
+        run: |
+          if [ "${{ vars.PUBLISH_PUB }}" != "true" ]; then
+            echo "::notice::PUBLISH_PUB is not 'true' -- skipping pub.dev."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: dart-lang/setup-dart@v1
+        if: steps.gate.outputs.ready == 'true'
         with:
           sdk: "3.5"
-      - run: dart pub get
-      - run: dart pub publish --dry-run
+      - if: steps.gate.outputs.ready == 'true'
+        run: dart pub get
+      - if: steps.gate.outputs.ready == 'true'
+        run: dart pub publish --dry-run
       - name: Publish
+        if: steps.gate.outputs.ready == 'true'
         run: dart pub publish --force
 
   maven:
@@ -94,7 +133,25 @@ jobs:
         working-directory: packages/kotlin
     steps:
       - uses: actions/checkout@v4
+
+      # This gate must come BEFORE setup-java: passing it an empty
+      # gpg-private-key makes the action fail outright, which is what turned a
+      # not-yet-configured registry into a red release.
+      - name: Skip when Central credentials are absent
+        id: gate
+        env:
+          USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          if [ -z "${USERNAME}" ] || [ -z "${KEY}" ]; then
+            echo "::notice::Maven Central credentials are not set -- skipping."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-java@v4
+        if: steps.gate.outputs.ready == 'true'
         with:
           distribution: temurin
           java-version: "17"
@@ -106,18 +163,6 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Skip when Central credentials are absent
-        id: gate
-        env:
-          USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-        run: |
-          if [ -z "${USERNAME}" ]; then
-            echo "MAVEN_CENTRAL_USERNAME is not set -- skipping publish."
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Deploy signed artifacts
         if: steps.gate.outputs.ready == 'true'
         env:
@@ -127,7 +172,7 @@ jobs:
         run: mvn -B --no-transfer-progress -P release deploy
 
       - name: Attach the JAR to the GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: steps.gate.outputs.ready == 'true' && startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
