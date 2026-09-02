@@ -56,8 +56,9 @@ IDE sharing one codebase.
 - Hand-written CodeMirror 6 theme and a SHE syntax mode.
 - Documentation: `ARCHITECTURE.md`, `SECURITY.md`, `CONTRIBUTING.md`,
   `ROADMAP.md`, `languages/README.md`, embedding guide.
-- 117 tests covering registry resolution, timeout enforcement, output capping,
-  Docker argument construction and every server trust boundary.
+- 157 tests across Python, Dart and Kotlin, covering registry resolution,
+  timeout enforcement, output capping, Docker argument construction, JSON
+  parsing, and every server trust boundary.
 
 ### Security
 
