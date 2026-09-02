@@ -56,13 +56,25 @@ release claims the name and publishes.
 
 ### 2. npm
 
-1. Create a **Granular Access Token** at
-   <https://www.npmjs.com/settings/~/tokens> with **Read and write** on the
-   `@nishachar` scope.
-2. Repo **Settings → Secrets and variables → Actions → New repository secret**:
-   `NPM_TOKEN`.
+The token **type** matters. With two-factor authentication set to
+*Authorization and writes* — npm's default — a granular access token still
+demands a one-time password, and CI has no authenticator. The publish fails
+with `EOTP` **after** signing provenance, which makes it look like a
+provenance problem rather than a 2FA one.
 
-The scope `@nishachar` is created automatically on first publish.
+Pick either:
+
+- **Classic Automation token** (recommended). At
+  <https://www.npmjs.com/settings/~/tokens> → *Generate New Token* →
+  **Classic Token** → **Automation**. This type is built for CI and bypasses
+  2FA, while your own logins stay protected.
+- **Or** relax the account setting: *Account → Two-Factor Authentication →*
+  set the mode to **Authorization only**. Then a granular token works too.
+
+Then add the token as the repository secret `NPM_TOKEN` under
+**Settings → Secrets and variables → Actions**.
+
+The `@nishachar` scope is created automatically on first publish.
 
 ### 3. pub.dev
 
@@ -80,6 +92,14 @@ Then enable automation for every release after that:
 2. **Automated publishing → Enable publishing from GitHub Actions**
 3. Repository: `ni-sh-a-char/ni_sh_a.char-IDE`, tag pattern: `v{{version}}`
 4. Set the repository variable `PUBLISH_PUB` to `true`.
+
+### 3b. GHCR image visibility
+
+The container image publishes automatically, but GitHub creates new packages
+**private**. Make it public once:
+
+<https://github.com/orgs/ni-sh-a-char/packages/container/nishachar-ide/settings>
+→ *Danger Zone* → **Change visibility** → Public.
 
 ### 4. Maven Central
 
