@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or idea
+    url: https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/discussions
+    about: Ask anything, or propose something before building it.
+  - name: Security vulnerability
+    url: https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/security/advisories/new
+    about: Report privately. Please do not open a public issue.

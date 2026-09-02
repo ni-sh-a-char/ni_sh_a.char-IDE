@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation — ni_sh_a.char-IDE</title>
+<meta name="description" content="Install, embed, and extend ni_sh_a.char-IDE. CLI reference, component API, HTTP API, and the language registry format.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2308080e'/><path d='M8 11l5 5-5 5M17 21h7' stroke='%23b48cff' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<style>
+:root {
+  --bg:#08080e; --surface:#12121c; --surface-2:#171725; --border:#23233a;
+  --fg:#e8e8f2; --muted:#8a8aa8; --dim:#5a5a72;
+  --violet:#b48cff; --mint:#6ee7b7; --sky:#7dd3fc; --amber:#ffb86c;
+  --mono: ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --sans: ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:80px; }
+body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.7 var(--sans); -webkit-font-smoothing:antialiased; }
+a { color:var(--violet); text-decoration:none; }
+a:hover { text-decoration:underline; }
+h1,h2,h3,h4 { line-height:1.2; letter-spacing:-.02em; margin:0; font-weight:700; }
+p { margin:0 0 16px; }
+
+nav { position:sticky; top:0; z-index:50; background:rgba(8,8,14,.85); backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--border); }
+nav .inner { max-width:1240px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; gap:22px; }
+.logo { display:flex; align-items:center; gap:9px; font-weight:700; color:var(--fg); letter-spacing:-.02em; }
+.logo svg { width:24px; height:24px; }
+nav .right { margin-left:auto; display:flex; gap:20px; align-items:center; }
+nav .right a { color:var(--muted); font-size:14px; font-weight:500; }
+nav .right a:hover { color:var(--fg); text-decoration:none; }
+
+.shell { max-width:1240px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:230px 1fr; gap:48px; }
+aside { position:sticky; top:60px; align-self:start; max-height:calc(100vh - 60px); overflow-y:auto; padding:32px 0 40px; }
+aside h4 { font:600 11px var(--mono); letter-spacing:.13em; text-transform:uppercase; color:var(--dim); margin:22px 0 9px; }
+aside h4:first-child { margin-top:0; }
+aside a { display:block; color:var(--muted); font-size:14px; padding:4px 0; border-left:2px solid transparent; padding-left:12px; margin-left:-14px; }
+aside a:hover { color:var(--fg); border-left-color:var(--border); text-decoration:none; }
+main { padding:32px 0 90px; min-width:0; max-width:780px; }
+
+h1 { font-size:2.4rem; margin-bottom:12px; }
+.sub { color:var(--muted); font-size:1.05rem; margin-bottom:40px; }
+h2 { font-size:1.6rem; margin:52px 0 14px; padding-top:8px; }
+h3 { font-size:1.14rem; margin:32px 0 10px; }
+h4 { font-size:1rem; margin:22px 0 8px; color:var(--sky); }
+
+pre { background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      padding:16px 18px; overflow-x:auto; margin:0 0 18px; font:13.5px/1.65 var(--mono); }
+pre .c { color:var(--dim); } pre .s { color:var(--mint); } pre .k { color:var(--violet); }
+pre .t { color:var(--sky); } pre .a { color:var(--amber); }
+code { font-family:var(--mono); font-size:.9em; }
+p code, li code, td code, aside code { background:var(--surface); border:1px solid var(--border);
+      border-radius:5px; padding:1.5px 6px; color:var(--mint); }
+
+table { width:100%; border-collapse:collapse; margin:0 0 20px; font-size:14.5px; }
+th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+th { color:var(--muted); font:600 11.5px var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+td:first-child { white-space:nowrap; }
+
+ul, ol { margin:0 0 18px; padding-left:22px; }
+li { margin-bottom:7px; }
+li::marker { color:var(--violet); }
+
+.note { border-left:3px solid var(--sky); background:var(--surface); border-radius:0 10px 10px 0;
+        padding:14px 18px; margin:0 0 20px; color:var(--muted); font-size:14.5px; }
+.note b { color:var(--fg); }
+.warn { border-left-color:var(--amber); }
+.warn b { color:var(--amber); }
+
+@media (max-width:900px) {
+  .shell { grid-template-columns:1fr; gap:0; }
+  aside { position:static; max-height:none; padding:24px 0 0; border-bottom:1px solid var(--border); }
+  aside a { display:inline-block; margin:0 14px 0 0; padding-left:0; border-left:0; }
+  aside h4 { margin-top:14px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a class="logo" href="../">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#12121c"/>
+        <path d="M8 11l5 5-5 5M17 21h7" stroke="#b48cff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      ni_sh_a.char-IDE
+    </a>
+    <div class="right">
+      <a href="../">Home</a>
+      <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+  <aside>
+    <h4>Start</h4>
+    <a href="#install">Install</a>
+    <a href="#quickstart">Quick start</a>
+    <h4>Use</h4>
+    <a href="#cli">CLI reference</a>
+    <a href="#component">Component API</a>
+    <a href="#library">Python library</a>
+    <a href="#http">HTTP API</a>
+    <h4>Extend</h4>
+    <a href="#registry">Language registry</a>
+    <a href="#runners">Execution tiers</a>
+    <h4>Operate</h4>
+    <a href="#security">Security</a>
+    <a href="#deploy">Self-hosting</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+  </aside>
+
+  <main>
+    <h1>Documentation</h1>
+    <p class="sub">Everything needed to install it, embed it, or teach it a new language.</p>
+
+    <h2 id="install">Install</h2>
+
+    <h4>The IDE and engine</h4>
+    <pre>pip install nishachar-ide</pre>
+    <p>Requires Python 3.10 or newer. This gives you the <code>nishachar</code> command, the HTTP
+    API, and the Python library.</p>
+
+    <h4>The embeddable component</h4>
+    <pre>npm install @nishachar/ide</pre>
+    <p>Or skip the install entirely and use a CDN:</p>
+    <pre><span class="k">&lt;script</span> <span class="a">type</span>=<span class="s">"module"</span> <span class="a">src</span>=<span class="s">"https://cdn.jsdelivr.net/npm/@nishachar/ide"</span><span class="k">&gt;&lt;/script&gt;</span></pre>
+
+    <h4>Container</h4>
+    <pre>docker run --rm -p 8777:8777 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  ghcr.io/ni-sh-a-char/nishachar-ide:2.0.0 --runner docker --host 0.0.0.0</pre>
+    <p>Mounting the Docker socket lets the server start a sandboxed container per language. Without
+    it you still get the API and IDE, limited to the toolchains inside the image.</p>
+
+    <h2 id="quickstart">Quick start</h2>
+    <pre>nishachar                       <span class="c"># the IDE, in your browser</span>
+nishachar run hello.she         <span class="c"># language inferred from the extension</span>
+nishachar run -l rust -c <span class="s">'fn main(){println!("hi")}'</span>
+nishachar languages             <span class="c"># what exists, and what you have installed</span></pre>
+
+    <h2 id="cli">CLI reference</h2>
+
+    <h3><code>nishachar</code></h3>
+    <p>With no arguments, starts the server and opens the IDE in your browser — the Jupyter model.
+    There is no Electron download.</p>
+
+    <h3><code>nishachar run</code></h3>
+    <pre>nishachar run FILE                 <span class="c"># infer language from extension</span>
+nishachar run FILE -l python       <span class="c"># force a language</span>
+nishachar run -l py -c <span class="s">'print(1)'</span>   <span class="c"># run a snippet</span>
+echo <span class="s">'print(1)'</span> | nishachar run -l py -   <span class="c"># read stdin</span></pre>
+    <table>
+      <tr><th>Flag</th><th>Meaning</th></tr>
+      <tr><td><code>-l, --language</code></td><td>Language id, alias or extension.</td></tr>
+      <tr><td><code>-c, --code</code></td><td>Run this snippet instead of a file.</td></tr>
+      <tr><td><code>--runner</code></td><td><code>auto</code> (default), <code>local</code> or <code>docker</code>.</td></tr>
+      <tr><td><code>--timeout</code></td><td>Seconds before the process tree is killed. Default 10.</td></tr>
+      <tr><td><code>-v, --verbose</code></td><td>Report the language, backend and timing to stderr.</td></tr>
+    </table>
+    <p>The exit code is the program's own exit code, so it composes with shell scripts and CI.</p>
+
+    <h3><code>nishachar languages</code></h3>
+    <p>Lists every registered language. A <code>*</code> marks the ones your machine can run right
+    now. <code>--available</code> shows only those.</p>
+
+    <h3><code>nishachar serve</code></h3>
+    <p>The API without opening a browser.</p>
+    <table>
+      <tr><th>Flag</th><th>Default</th><th>Meaning</th></tr>
+      <tr><td><code>--host</code></td><td><code>127.0.0.1</code></td><td>Bind address.</td></tr>
+      <tr><td><code>--port</code></td><td><code>8777</code></td><td>Port.</td></tr>
+      <tr><td><code>--runner</code></td><td><code>auto</code></td><td>Execution backend.</td></tr>
+      <tr><td><code>--cors</code></td><td><em>closed</em></td><td>Allow embedding from this origin. Repeatable.</td></tr>
+      <tr><td><code>--allow-shell</code></td><td>off</td><td>Enable the terminal endpoint.</td></tr>
+      <tr><td><code>--allowed-host</code></td><td>loopback</td><td>Extra acceptable <code>Host</code> value. Repeatable.</td></tr>
+      <tr><td><code>--allow-remote-exec</code></td><td>off</td><td>Permit the unsandboxed runner off loopback.</td></tr>
+    </table>
+
+    <h2 id="component">Component API</h2>
+    <p><code>&lt;nishachar-ide&gt;</code> is a native custom element. It needs no framework wrapper
+    because custom elements are part of the platform.</p>
+
+    <h3>Attributes</h3>
+    <table>
+      <tr><th>Attribute</th><th>Values</th><th>Meaning</th></tr>
+      <tr><td><code>language</code></td><td>id · alias · extension</td><td>Starting language. Default <code>python</code>.</td></tr>
+      <tr><td><code>code</code></td><td>source text</td><td>Initial buffer. Inline text content also works.</td></tr>
+      <tr><td><code>theme</code></td><td><code>dark</code> · <code>light</code></td><td>Follows the OS when unset.</td></tr>
+      <tr><td><code>endpoint</code></td><td>URL</td><td>Backend to run against. Omit for in-browser.</td></tr>
+      <tr><td><code>runtime</code></td><td><code>auto</code> · <code>browser</code> · <code>remote</code></td><td>Default <code>auto</code>.</td></tr>
+      <tr><td><code>readonly</code></td><td>present</td><td>Editor is not editable.</td></tr>
+      <tr><td><code>stdin</code></td><td>present</td><td>Show the standard-input tab.</td></tr>
+      <tr><td><code>layout</code></td><td><code>split</code> · <code>stacked</code></td><td>Defaults to width-based.</td></tr>
+      <tr><td><code>timeout</code></td><td>milliseconds</td><td>Per-run limit.</td></tr>
+    </table>
+
+    <h3>Properties, methods and events</h3>
+    <pre><span class="k">const</span> ide = document.<span class="t">querySelector</span>(<span class="s">'nishachar-ide'</span>);
+
+ide.value    = <span class="s">'print("hello")'</span>;   <span class="c">// read/write the buffer</span>
+ide.language = <span class="s">'python'</span>;
+ide.stdin    = <span class="s">'piped input'</span>;
+<span class="k">await</span> ide.<span class="t">run</span>();                    <span class="c">// resolves with the result object</span>
+ide.<span class="t">focus</span>();
+
+ide.<span class="t">addEventListener</span>(<span class="s">'ready'</span>,  e =&gt; e.detail.languages);
+ide.<span class="t">addEventListener</span>(<span class="s">'change'</span>, e =&gt; e.detail.code);
+ide.<span class="t">addEventListener</span>(<span class="s">'run'</span>,    e =&gt; e.detail.language);
+ide.<span class="t">addEventListener</span>(<span class="s">'result'</span>, e =&gt; e.detail.stdout);</pre>
+    <p>Press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Enter</kbd> in the editor to run.</p>
+
+    <h3>Theming</h3>
+    <pre>nishachar-ide {
+  --nsc-accent: #ff4f81;
+  --nsc-bg: #000;
+  --nsc-mono: <span class="s">'JetBrains Mono'</span>, monospace;
+  --nsc-radius: 4px;
+  height: 600px;
+}
+nishachar-ide::part(toolbar) { border-bottom: 2px solid var(--nsc-accent); }</pre>
+    <p>Exposed parts: <code>toolbar</code>, <code>editor</code>, <code>output</code>,
+    <code>run-button</code>.</p>
+
+    <div class="note"><b>Which languages run without a backend?</b> Python, SHE and JavaScript. The
+    language dropdown groups the rest under “Needs a backend”, so users are never left guessing.</div>
+
+    <h2 id="library">Python library</h2>
+    <pre><span class="k">import</span> nishachar
+
+result = nishachar.<span class="t">run</span>(<span class="s">'say "hello"'</span>, <span class="s">"she"</span>)
+result.stdout       <span class="c"># 'hello\n'</span>
+result.exit_code    <span class="c"># 0</span>
+result.duration_ms  <span class="c"># 158</span>
+result.ok           <span class="c"># True</span>
+result.timed_out    <span class="c"># False</span>
+result.truncated    <span class="c"># False</span>
+
+nishachar.<span class="t">run_file</span>(<span class="s">"script.rs"</span>, runner=<span class="s">"docker"</span>, timeout=<span class="a">30</span>)
+nishachar.<span class="t">languages</span>()        <span class="c"># every Language in the registry</span>
+nishachar.registry.<span class="t">require</span>(<span class="s">"go"</span>)</pre>
+
+    <h2 id="http">HTTP API</h2>
+    <table>
+      <tr><th>Endpoint</th><th>Returns</th></tr>
+      <tr><td><code>GET /api/health</code></td><td>Version, active runner, language count, whether the shell is on.</td></tr>
+      <tr><td><code>GET /api/languages</code></td><td>Every language, each flagged with <code>localToolchain</code>.</td></tr>
+      <tr><td><code>POST /api/run</code></td><td>Executes and returns the result.</td></tr>
+      <tr><td><code>WS /api/pty</code></td><td>Interactive terminal. Requires <code>--allow-shell</code>.</td></tr>
+    </table>
+    <pre>curl -X POST http://localhost:8777/api/run \
+  -H <span class="s">'content-type: application/json'</span> \
+  -d <span class="s">'{"language":"she","code":"say \"hi\"","stdin":"","timeout":10}'</span>
+
+<span class="c">{"stdout":"hi\n","stderr":"","exitCode":0,"durationMs":158,
+ "timedOut":false,"truncated":false,"runner":"local","language":"she","ok":true}</span></pre>
+    <table>
+      <tr><th>Status</th><th>Meaning</th></tr>
+      <tr><td><code>400</code></td><td>Malformed body, or a field of the wrong type.</td></tr>
+      <tr><td><code>404</code></td><td>Unknown language.</td></tr>
+      <tr><td><code>413</code></td><td>Source larger than 1 MiB.</td></tr>
+      <tr><td><code>421</code></td><td><code>Host</code> header not accepted — see Security.</td></tr>
+      <tr><td><code>422</code></td><td>No backend could run that language.</td></tr>
+    </table>
+
+    <h2 id="registry">Language registry</h2>
+    <p>Every language is one JSON file. Adding one requires no source changes.</p>
+    <pre>{
+  <span class="t">"id"</span>: <span class="s">"ruby"</span>,
+  <span class="t">"name"</span>: <span class="s">"Ruby"</span>,
+  <span class="t">"extensions"</span>: [<span class="s">".rb"</span>],
+  <span class="t">"image"</span>: <span class="s">"ruby:3.3-slim"</span>,
+  <span class="t">"run"</span>: [<span class="s">"ruby"</span>, <span class="s">"{file}"</span>],
+  <span class="t">"template"</span>: <span class="s">"puts \"Hello from Ruby!\"\n"</span>
+}</pre>
+    <table>
+      <tr><th>Placeholder</th><th>Becomes</th></tr>
+      <tr><td><code>{file}</code></td><td>Full path to the source file.</td></tr>
+      <tr><td><code>{bin}</code></td><td>Path the compiled binary should be written to.</td></tr>
+      <tr><td><code>{dir}</code></td><td>The working directory.</td></tr>
+      <tr><td><code>{stem}</code></td><td>Filename without its extension.</td></tr>
+    </table>
+    <p>Placeholders substitute <em>inside</em> an argument, so <code>"-o{bin}"</code> works.
+    Commands are argument vectors, never shell strings — nothing reaches a shell, so there is no
+    quoting to get right and nothing to inject.</p>
+    <p><a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md">Full field reference and contribution guide →</a></p>
+
+    <h2 id="runners">Execution tiers</h2>
+    <table>
+      <tr><th>Tier</th><th>Where</th><th>Languages</th><th>Isolation</th></tr>
+      <tr><td><code>browser</code></td><td>the visitor's tab</td><td>Python, SHE, JS</td><td>the browser sandbox</td></tr>
+      <tr><td><code>local</code></td><td>your machine</td><td>whatever is installed</td><td>none — runs as you</td></tr>
+      <tr><td><code>docker</code></td><td>a container</td><td>all 62</td><td>strong</td></tr>
+    </table>
+    <p><code>auto</code> resolves per language: your local toolchain if you have it, a container if
+    you don't. That is what lets Rust run on a machine with only Python installed.</p>
+
+    <h2 id="security">Security</h2>
+    <div class="note warn"><b>The local tier has no isolation.</b> It runs code as you, with your
+    privileges. That is correct for code you wrote and wrong for anyone else's. Use
+    <code>--runner docker</code> for input you do not trust.</div>
+    <p>Server defaults are deliberately restrictive:</p>
+    <ul>
+      <li>The unsandboxed runner is <b>refused off loopback</b> unless explicitly overridden.</li>
+      <li><b>CORS is closed.</b> An open policy on a localhost server would let any page you visit
+      execute code on your machine.</li>
+      <li>The <b><code>Host</code> header is validated</b> on loopback binds, which is what stops
+      DNS rebinding.</li>
+      <li>The <b>terminal is off</b> until <code>--allow-shell</code>.</li>
+      <li>Every tier enforces a timeout and an output cap, and kills the whole process tree.</li>
+    </ul>
+    <p><a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/main/SECURITY.md">Full threat model, including what it does not protect against →</a></p>
+
+    <h2 id="deploy">Self-hosting</h2>
+    <p>Serving this to people you do not trust:</p>
+    <pre>nishachar serve \
+  --host 0.0.0.0 \
+  --runner docker \          <span class="c"># never 'local'</span>
+  --timeout 10 \
+  --cors https://your-site.example</pre>
+    <p>Leave the terminal off, put it behind a reverse proxy with rate limiting, and run the whole
+    thing inside a VM. Containers share a kernel; they are a strong boundary, not an absolute one.</p>
+
+    <h2 id="troubleshooting">Troubleshooting</h2>
+
+    <h4>“<code>X</code> is not installed or not on PATH”</h4>
+    <p>The local toolchain is missing. Install it, or run with <code>--runner docker</code> to use a
+    container instead.</p>
+
+    <h4>The <code>nishachar</code> command isn't found after install</h4>
+    <p>pip installed it somewhere off your <code>PATH</code>. <code>python -m nishachar</code> works
+    identically, or add the reported scripts directory to <code>PATH</code>.</p>
+
+    <h4>The first in-browser run is slow</h4>
+    <p>Expected. Pyodide is a full CPython build and takes roughly three seconds to download and
+    start. It is cached afterwards, and SHE adds about two more seconds the first time while
+    micropip fetches it from PyPI.</p>
+
+    <h4>The embedded component won't reach my server</h4>
+    <p>CORS is closed by default. Start the server with
+    <code>--cors https://your-site.example</code>.</p>
+
+    <h4>The terminal shows no colours on Windows</h4>
+    <p>ConPTY needs the optional dependency: <code>pip install "nishachar-ide[pty]"</code>. Without
+    it the terminal falls back to pipes, which run commands but have no TTY.</p>
+  </main>
+</div>
+</body>
+</html>

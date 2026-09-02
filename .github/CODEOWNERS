@@ -1,0 +1,11 @@
+# Default owner for everything.
+*                       @PIYUSH-MISHRA-00
+
+# The registry is the contribution surface. Language additions are welcome from
+# anyone; review is mostly about whether the command is correct.
+/languages/             @PIYUSH-MISHRA-00
+
+# Security boundaries. Changes here need careful review -- see SECURITY.md.
+/packages/core/nishachar/server.py    @PIYUSH-MISHRA-00
+/packages/core/nishachar/runners/     @PIYUSH-MISHRA-00
+/SECURITY.md                          @PIYUSH-MISHRA-00

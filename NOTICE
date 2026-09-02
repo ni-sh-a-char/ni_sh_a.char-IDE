@@ -1,0 +1,23 @@
+ni_sh_a.char-IDE
+Copyright 2022-2026 Piyush Mishra
+
+This product includes software developed by Piyush Mishra and the
+ni_sh_a.char-IDE contributors.
+
+Licensed under the Apache License, Version 2.0. See the LICENSE file.
+
+--------------------------------------------------------------------------
+Third-party components used at build or run time. None of these are
+vendored in this repository; they are fetched from public package
+registries or CDNs.
+
+  CodeMirror 6           MIT        https://codemirror.net
+  Pyodide                MPL-2.0    https://pyodide.org
+  Starlette              BSD-3      https://www.starlette.io
+  Uvicorn                BSD-3      https://www.uvicorn.org
+  esbuild                MIT        https://esbuild.github.io
+
+The SHE programming language (https://github.com/ni-sh-a-char/SHE) is an
+independent project. This IDE integrates it through its public CLI and its
+published PyPI package `she-lang`. SHE is neither vendored nor modified
+here, and this project claims no ownership of it.

@@ -1,0 +1,33 @@
+name: ✨ Feature request
+description: Suggest something the project should do.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check [ROADMAP.md](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/main/ROADMAP.md)
+        first — it lists what's planned, and also what has been deliberately
+        ruled out and why.
+
+        Adding a language doesn't need this form; use the language template.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the situation you're in, not the solution you have in mind.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like it to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What have you tried instead?
+      description: Workarounds, or other tools that solve it.

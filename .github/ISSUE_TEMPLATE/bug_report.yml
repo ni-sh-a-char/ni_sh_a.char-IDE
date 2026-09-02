@@ -1,0 +1,66 @@
+name: 🐛 Bug report
+description: Something behaves differently than documented.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you expected, and what you got instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: How can we reproduce it?
+      description: The exact command or the smallest snippet that shows it.
+      render: shell
+      placeholder: |
+        nishachar run -l python -c 'print(1)'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where did you hit this?
+      options:
+        - CLI (nishachar)
+        - The IDE in the browser
+        - The embedded <nishachar-ide> component
+        - The HTTP API
+        - The Python library
+        - The language registry (a language runs incorrectly)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: runner
+    attributes:
+      label: Which execution tier?
+      options: ["auto", "local", "docker", "browser (in-tab)", "not sure"]
+    validations:
+      required: true
+
+  - type: input
+    id: language
+    attributes:
+      label: Which language?
+      placeholder: python
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: "Output of `nishachar --version`, plus your OS. For browser issues, the browser and version."
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error output
+      description: Any traceback or console error. Automatically formatted as code.
+      render: shell

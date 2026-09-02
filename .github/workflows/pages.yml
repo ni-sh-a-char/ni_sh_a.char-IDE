@@ -1,0 +1,79 @@
+name: Deploy site
+
+# The website lives on `main`, the component it demonstrates lives on `develop`.
+# Rather than commit a build artefact (which goes stale) or depend on npm having
+# published (which breaks the demo until release day), this job checks out both
+# and builds the bundle at deploy time.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the site (main)
+        uses: actions/checkout@v4
+
+      - name: Check out the source (develop)
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          path: .source
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: .source/packages/web/package-lock.json
+
+      - name: Build the component
+        working-directory: .source/packages/web
+        run: npm ci --no-audit --no-fund && npm run build
+
+      - name: Assemble the site
+        run: |
+          set -euo pipefail
+          cp .source/packages/web/dist/nishachar-ide.js       site/assets/
+          cp .source/packages/web/dist/nishachar-ide.js.map   site/assets/ || true
+          cp .source/packages/web/dist/nishachar-ide.iife.js  site/assets/ || true
+          touch site/.nojekyll
+          echo "assets:"
+          ls -lh site/assets/
+
+      - name: The demo must not ship broken
+        run: |
+          set -euo pipefail
+          test -s site/assets/nishachar-ide.js
+          grep -q "nishachar-ide" site/assets/nishachar-ide.js
+          grep -q "LANGUAGES" site/assets/nishachar-ide.js
+          echo "bundle looks sane"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

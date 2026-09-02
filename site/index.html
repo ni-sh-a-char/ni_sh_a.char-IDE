@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ni_sh_a.char-IDE — Run any language. Anywhere.</title>
+<meta name="description" content="A polyglot execution engine, a standalone IDE, and a one-line embeddable component. 62 languages, running in your browser with no backend at all.">
+<link rel="canonical" href="https://ni-sh-a-char.github.io/ni_sh_a.char-IDE/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="ni_sh_a.char-IDE — Run any language. Anywhere.">
+<meta property="og:description" content="62 languages. Runs in your browser with no backend. Embed it in one line.">
+<meta property="og:url" content="https://ni-sh-a-char.github.io/ni_sh_a.char-IDE/">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2308080e'/><path d='M8 11l5 5-5 5M17 21h7' stroke='%23b48cff' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+<style>
+:root {
+  --bg: #08080e;
+  --surface: #12121c;
+  --surface-2: #171725;
+  --border: #23233a;
+  --fg: #e8e8f2;
+  --muted: #8a8aa8;
+  --dim: #5a5a72;
+  --violet: #b48cff;
+  --mint: #6ee7b7;
+  --sky: #7dd3fc;
+  --amber: #ffb86c;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
+  --max: 1120px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--sans); font-size: 16px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+a { color: var(--violet); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3 { line-height: 1.15; letter-spacing: -0.025em; margin: 0; font-weight: 700; }
+p { margin: 0; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+/* The faint grid + glow that gives the page its depth. Pure CSS, no images. */
+.backdrop {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(900px 500px at 50% -10%, rgba(180,140,255,.16), transparent 70%),
+    radial-gradient(700px 400px at 90% 10%, rgba(110,231,183,.08), transparent 70%);
+}
+.backdrop::after {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 75%);
+}
+
+/* ---------- nav ---------- */
+nav {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  background: rgba(8,8,14,.78); border-bottom: 1px solid var(--border);
+}
+nav .wrap { display: flex; align-items: center; gap: 22px; height: 60px; }
+.logo { display: flex; align-items: center; gap: 9px; font-weight: 700; color: var(--fg); letter-spacing: -.02em; }
+.logo svg { width: 24px; height: 24px; flex: 0 0 auto; }
+nav .links { display: flex; gap: 22px; margin-left: auto; align-items: center; }
+nav .links a { color: var(--muted); font-size: 14px; font-weight: 500; }
+nav .links a:hover { color: var(--fg); text-decoration: none; }
+.star {
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 13px;
+  color: var(--fg) !important; font-size: 13.5px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.star:hover { border-color: var(--violet); }
+@media (max-width: 760px) { nav .links a:not(.star) { display: none; } }
+
+/* ---------- hero ---------- */
+header { padding: 76px 0 36px; text-align: center; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 9px;
+  font: 600 11.5px/1 var(--mono); letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
+  padding: 8px 15px; margin-bottom: 26px; background: var(--surface);
+}
+.eyebrow b { color: var(--mint); font-weight: 700; }
+h1 { font-size: clamp(2.6rem, 7.5vw, 4.6rem); margin-bottom: 20px; }
+h1 .grad {
+  background: linear-gradient(100deg, var(--violet) 10%, var(--sky) 55%, var(--mint) 95%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.lede {
+  font-size: clamp(1.02rem, 2.4vw, 1.22rem); color: var(--muted);
+  max-width: 660px; margin: 0 auto 30px;
+}
+.lede b { color: var(--fg); font-weight: 600; }
+
+.cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 12px 22px; border-radius: 10px; font: 600 14.5px var(--sans);
+  border: 1px solid transparent; cursor: pointer; transition: transform .12s ease, filter .12s ease;
+}
+.btn:hover { text-decoration: none; transform: translateY(-1px); }
+.btn-primary { background: linear-gradient(100deg, var(--violet), #8b6cf0); color: #14082a; }
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-ghost { border-color: var(--border); color: var(--fg); background: var(--surface); }
+.btn-ghost:hover { border-color: var(--violet); }
+
+.install {
+  display: inline-flex; align-items: center; gap: 12px; margin-top: 8px;
+  font: 14px var(--mono); color: var(--muted);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 14px;
+}
+.install code { color: var(--mint); }
+.install button {
+  background: none; border: 0; color: var(--dim); cursor: pointer;
+  font: 11px var(--mono); padding: 2px 6px; border-radius: 5px;
+}
+.install button:hover { color: var(--fg); background: var(--surface-2); }
+
+/* ---------- live demo ---------- */
+.demo { padding: 26px 0 84px; }
+.demo-frame {
+  border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+  background: var(--surface); box-shadow: 0 24px 70px -20px rgba(0,0,0,.85), 0 0 0 1px rgba(180,140,255,.07);
+}
+.demo-head {
+  display: flex; align-items: center; gap: 10px; padding: 11px 15px;
+  border-bottom: 1px solid var(--border); background: var(--surface-2);
+}
+.dots { display: flex; gap: 6px; }
+.dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+.demo-head span {
+  font: 600 11.5px var(--mono); color: var(--dim);
+  letter-spacing: .06em; margin-left: 4px;
+}
+.demo-head .live {
+  margin-left: auto; color: var(--mint); display: inline-flex; align-items: center; gap: 7px;
+  font: 600 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase;
+}
+.demo-head .live::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--mint);
+  box-shadow: 0 0 0 0 rgba(110,231,183,.7); animation: pulse 2.2s infinite;
+}
+@keyframes pulse {
+  70% { box-shadow: 0 0 0 8px rgba(110,231,183,0); }
+  100% { box-shadow: 0 0 0 0 rgba(110,231,183,0); }
+}
+nishachar-ide { height: 460px; --nsc-radius: 0; }
+nishachar-ide::part(toolbar) { border-radius: 0; }
+.demo-note {
+  text-align: center; color: var(--dim); font-size: 13px; margin-top: 16px;
+}
+.demo-note code { font-family: var(--mono); color: var(--muted); }
+
+/* ---------- sections ---------- */
+section { padding: 84px 0; border-top: 1px solid var(--border); }
+.section-tag {
+  font: 600 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: 14px;
+}
+h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); margin-bottom: 16px; }
+.section-lede { color: var(--muted); max-width: 680px; font-size: 1.04rem; margin-bottom: 44px; }
+
+.grid-3 { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 26px; position: relative; overflow: hidden;
+}
+.card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, var(--tint, var(--violet)), transparent 70%);
+}
+.card .tier {
+  font: 700 10.5px var(--mono); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--tint, var(--violet)); margin-bottom: 12px;
+}
+.card h3 { font-size: 1.2rem; margin-bottom: 10px; }
+.card p { color: var(--muted); font-size: .95rem; }
+.card ul { margin: 14px 0 0; padding-left: 18px; color: var(--muted); font-size: .89rem; }
+.card li { margin-bottom: 5px; }
+.card li::marker { color: var(--tint, var(--violet)); }
+
+/* ---------- language wall ---------- */
+.wall { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: 500 13px var(--sans); color: var(--muted);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 13px; cursor: pointer;
+  transition: color .12s ease, border-color .12s ease, transform .12s ease;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.chip:hover { color: var(--fg); border-color: var(--violet); transform: translateY(-1px); }
+.chip.browser { color: var(--fg); border-color: rgba(110,231,183,.35); }
+.chip.browser::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--mint);
+}
+.wall-legend {
+  display: flex; gap: 20px; flex-wrap: wrap; margin-top: 22px;
+  font-size: 13px; color: var(--dim);
+}
+.wall-legend i { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); display: inline-block; }
+
+/* ---------- code blocks ---------- */
+pre {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px 20px; overflow-x: auto; margin: 0;
+  font: 13.5px/1.7 var(--mono); color: var(--fg);
+}
+pre .c { color: var(--dim); }
+pre .t { color: var(--sky); }
+pre .s { color: var(--mint); }
+pre .k { color: var(--violet); }
+pre .a { color: var(--amber); }
+code { font-family: var(--mono); font-size: .92em; }
+p code, li code, td code {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 5px; padding: 1.5px 6px; color: var(--mint);
+}
+
+.two-col { display: grid; gap: 32px; grid-template-columns: 1fr 1fr; align-items: start; }
+@media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+
+.why { display: grid; gap: 26px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 40px; }
+.why h3 { font-size: 1.02rem; margin-bottom: 8px; display: flex; align-items: center; gap: 9px; }
+.why h3 span { color: var(--violet); font: 700 12px var(--mono); }
+.why p { color: var(--muted); font-size: .93rem; }
+
+.steps { counter-reset: step; display: grid; gap: 18px; margin-top: 30px; }
+.step { display: flex; gap: 16px; align-items: flex-start; }
+.step::before {
+  counter-increment: step; content: counter(step);
+  flex: 0 0 auto; width: 28px; height: 28px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--violet); font: 700 13px var(--mono);
+  display: grid; place-items: center;
+}
+.step div { flex: 1; min-width: 0; }
+.step h3 { font-size: 1rem; margin-bottom: 6px; }
+.step p { color: var(--muted); font-size: .93rem; margin-bottom: 10px; }
+
+footer { border-top: 1px solid var(--border); padding: 52px 0 44px; color: var(--dim); font-size: 14px; }
+.foot-grid { display: flex; gap: 40px; flex-wrap: wrap; justify-content: space-between; margin-bottom: 34px; }
+.foot-col h4 {
+  font: 600 11.5px var(--mono); letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 12px;
+}
+.foot-col a { display: block; color: var(--dim); font-size: 14px; margin-bottom: 7px; }
+.foot-col a:hover { color: var(--fg); text-decoration: none; }
+.foot-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#top">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#12121c"/>
+        <path d="M8 11l5 5-5 5M17 21h7" stroke="#b48cff" stroke-width="2.5" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      ni_sh_a.char-IDE
+    </a>
+    <div class="links">
+      <a href="#tiers">How it works</a>
+      <a href="#languages">Languages</a>
+      <a href="#embed">Embed</a>
+      <a href="docs/">Docs</a>
+      <a class="star" href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.49c-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.19c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+        Star
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="wrap">
+    <div class="eyebrow"><b id="lang-count">62</b> languages · v2.0.0 · Apache 2.0</div>
+    <h1>Run any language.<br><span class="grad">Anywhere.</span></h1>
+    <p class="lede">
+      A polyglot execution engine, a standalone IDE, and a one-line embeddable component.
+      <b>The editor below is the real product</b> — not a screenshot. Press Run.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#embed">Embed it in one line</a>
+      <a class="btn btn-ghost" href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+    <div class="install">
+      <code id="install-cmd">pip install nishachar-ide &amp;&amp; nishachar</code>
+      <button type="button" id="copy-install" aria-label="Copy install command">COPY</button>
+    </div>
+  </div>
+</header>
+
+<div class="demo">
+  <div class="wrap">
+    <div class="demo-frame">
+      <div class="demo-head">
+        <div class="dots">
+          <i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
+        </div>
+        <span>hello.she</span>
+        <span class="live">running in your browser</span>
+      </div>
+      <nishachar-ide id="hero" language="she" theme="dark" stdin></nishachar-ide>
+    </div>
+    <p class="demo-note">
+      No backend. No account. Your code never leaves this tab — the first run downloads a
+      Python runtime (~3s), then <code>she-lang</code> straight from PyPI.
+    </p>
+  </div>
+</div>
+
+<section id="tiers">
+  <div class="wrap">
+    <div class="section-tag">How it works</div>
+    <h2>Three places to run code. One interface.</h2>
+    <p class="section-lede">
+      Every backend implements the same tiny contract and returns the same result shape,
+      so nothing above them cares which one ran. <code>auto</code> picks per language.
+    </p>
+    <div class="grid-3">
+      <div class="card" style="--tint: var(--mint)">
+        <div class="tier">Tier 0 · Browser</div>
+        <h3>WebAssembly, no backend</h3>
+        <p>Python, SHE and JavaScript execute in the visitor's own tab. This is what makes an embed on a static site free to run — forever.</p>
+        <ul><li>Pyodide (CPython on WASM)</li><li>SHE installed from PyPI at runtime</li><li>JS in a terminable Worker</li></ul>
+      </div>
+      <div class="card" style="--tint: var(--sky)">
+        <div class="tier">Tier 1 · Local</div>
+        <h3>Your machine, your toolchains</h3>
+        <p>A subprocess against whatever you have installed. Instant, offline, and exactly right for code you wrote yourself.</p>
+        <ul><li>Wall-clock timeout</li><li>Output byte cap</li><li>Whole process tree killed</li></ul>
+      </div>
+      <div class="card" style="--tint: var(--violet)">
+        <div class="tier">Tier 2 · Docker</div>
+        <h3>Locked-down containers</h3>
+        <p>For code you did not write. Every one of the 62 languages, with the network cut and the filesystem read-only.</p>
+        <ul><li><code>--network none</code></li><li><code>--read-only --cap-drop ALL</code></li><li>memory · CPU · PID caps</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="languages">
+  <div class="wrap">
+    <div class="section-tag">The registry</div>
+    <h2>A language is data, not code.</h2>
+    <p class="section-lede">
+      No language has an integration written for it. Each one is a single JSON file, which is why
+      adding your favourite is an 8-line pull request that touches no source.
+      <b>Click any language to load it above.</b>
+    </p>
+    <div class="wall" id="wall"></div>
+    <div class="wall-legend">
+      <span><i></i> runs in your browser, no backend</span>
+      <span>everything else needs <code>nishachar serve</code></span>
+    </div>
+
+    <div class="two-col" style="margin-top:48px">
+      <div>
+        <h3 style="font-size:1.1rem;margin-bottom:12px">That's the whole integration</h3>
+        <pre><span class="c">// languages/ruby.json</span>
+{
+  <span class="t">"id"</span>: <span class="s">"ruby"</span>,
+  <span class="t">"name"</span>: <span class="s">"Ruby"</span>,
+  <span class="t">"extensions"</span>: [<span class="s">".rb"</span>],
+  <span class="t">"image"</span>: <span class="s">"ruby:3.3-slim"</span>,
+  <span class="t">"run"</span>: [<span class="s">"ruby"</span>, <span class="s">"{file}"</span>],
+  <span class="t">"template"</span>: <span class="s">"puts \"Hello!\"\n"</span>
+}</pre>
+      </div>
+      <div>
+        <h3 style="font-size:1.1rem;margin-bottom:12px">Compiled languages add one field</h3>
+        <pre><span class="c">// languages/rust.json</span>
+{
+  <span class="t">"id"</span>: <span class="s">"rust"</span>,
+  <span class="t">"extensions"</span>: [<span class="s">".rs"</span>],
+  <span class="t">"image"</span>: <span class="s">"rust:1-slim"</span>,
+  <span class="t">"compile"</span>: [[<span class="s">"rustc"</span>, <span class="s">"{file}"</span>, <span class="s">"-o"</span>, <span class="s">"{bin}"</span>]],
+  <span class="t">"run"</span>: [<span class="s">"{bin}"</span>]
+}</pre>
+        <p style="color:var(--muted);font-size:.92rem;margin-top:14px">
+          Commands are argument vectors, never shell strings — so there is no quoting to get
+          right and nothing to inject. <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md">Full field reference →</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="embed">
+  <div class="wrap">
+    <div class="section-tag">Embed</div>
+    <h2>One line. Any framework.</h2>
+    <p class="section-lede">
+      It is a native custom element, not a React component — so there is no React port, no Vue port
+      and no Svelte port to keep in sync. One file works unmodified everywhere.
+    </p>
+
+    <pre><span class="c">&lt;!-- anywhere in your page --&gt;</span>
+<span class="k">&lt;script</span> <span class="a">type</span>=<span class="s">"module"</span> <span class="a">src</span>=<span class="s">"https://cdn.jsdelivr.net/npm/@nishachar/ide"</span><span class="k">&gt;&lt;/script&gt;</span>
+
+<span class="k">&lt;nishachar-ide</span> <span class="a">language</span>=<span class="s">"she"</span><span class="k">&gt;&lt;/nishachar-ide&gt;</span></pre>
+
+    <div class="two-col" style="margin-top:34px">
+      <div>
+        <h3 style="font-size:1.05rem;margin-bottom:12px">Works in</h3>
+        <div class="wall">
+          <span class="chip">React</span><span class="chip">Vue</span><span class="chip">Svelte</span>
+          <span class="chip">Angular</span><span class="chip">Astro</span><span class="chip">Next.js</span>
+          <span class="chip">Plain HTML</span><span class="chip">WordPress</span>
+          <span class="chip">Electron</span><span class="chip">Tauri</span>
+        </div>
+        <p style="color:var(--muted);font-size:.93rem;margin-top:18px">
+          Shadow DOM keeps your CSS out of the editor and the editor's CSS out of your page.
+          Theme it with custom properties and <code>::part()</code>.
+        </p>
+      </div>
+      <div>
+        <h3 style="font-size:1.05rem;margin-bottom:12px">Drive it from JavaScript</h3>
+        <pre><span class="k">const</span> ide = document.<span class="t">querySelector</span>(<span class="s">'nishachar-ide'</span>);
+
+ide.value = <span class="s">'print("hi")'</span>;
+ide.language = <span class="s">'python'</span>;
+<span class="k">const</span> result = <span class="k">await</span> ide.<span class="t">run</span>();
+
+ide.<span class="t">addEventListener</span>(<span class="s">'result'</span>, e =&gt;
+  console.<span class="t">log</span>(e.detail.stdout));</pre>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);margin-top:30px">
+      Want all 62 languages instead of the three that run in-browser? Point it at a backend:
+      <code>pip install nishachar-ide &amp;&amp; nishachar serve</code>, then set
+      <code>endpoint="http://localhost:8777"</code>.
+    </p>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="section-tag">Why it's built this way</div>
+    <h2>Nobody's credit card is holding this up.</h2>
+    <p class="section-lede">
+      Every online IDE POSTs your code to somebody's server, runs it in somebody's container, and
+      bills it to somebody's card. That works right until the free tier ends or the maintainer
+      loses interest. This one inverts the architecture.
+    </p>
+    <div class="why">
+      <div>
+        <h3><span>01</span> Nothing to abuse</h3>
+        <p>There is no hosted "run this code" endpoint, so there is nothing to turn into a free botnet — the failure mode that kills projects like this within days.</p>
+      </div>
+      <div>
+        <h3><span>02</span> Nothing to fund</h3>
+        <p>Code runs on hardware already paid for: the visitor's tab or your own machine. The demo you just used costs its maintainer exactly nothing.</p>
+      </div>
+      <div>
+        <h3><span>03</span> Nothing to shut down</h3>
+        <p>No central service means no service to go away. The component keeps working from a CDN, or from a copy you vendored yourself.</p>
+      </div>
+      <div>
+        <h3><span>04</span> Nothing to trust</h3>
+        <p>In-browser execution means your code is never transmitted anywhere. Open the network tab during a run and watch nothing happen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contribute">
+  <div class="wrap">
+    <div class="section-tag">Contribute</div>
+    <h2>Your favourite language is probably missing.</h2>
+    <p class="section-lede">
+      There are thousands of programming languages. We ship 62. The gap is the point — and closing
+      a bit of it is the easiest first contribution this project has to offer.
+    </p>
+    <div class="steps">
+      <div class="step">
+        <div>
+          <h3>Add one JSON file</h3>
+          <p>Create <code>languages/&lt;id&gt;.json</code> with a name, extensions, a run command and a hello-world. No source code changes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h3>Check it locally</h3>
+          <pre>nishachar run -l yourlang -c <span class="s">'&lt;hello world&gt;'</span></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h3>Open the pull request</h3>
+          <p>CI validates every registry file against a schema, so a typo fails before a human has to spot it.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cta" style="justify-content:flex-start;margin-top:36px">
+      <a class="btn btn-primary" href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md" target="_blank" rel="noopener">Add a language</a>
+      <a class="btn btn-ghost" href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/labels/good%20first%20issue" target="_blank" rel="noopener">Good first issues</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div style="max-width:290px">
+        <a class="logo" href="#top" style="margin-bottom:12px">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="8" fill="#12121c"/>
+            <path d="M8 11l5 5-5 5M17 21h7" stroke="#b48cff" stroke-width="2.5" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ni_sh_a.char-IDE
+        </a>
+        <p style="color:var(--dim);font-size:13.5px">Run any language, anywhere. Apache 2.0, and free in the sense that costs nobody anything to keep running.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="docs/">Documentation</a>
+        <a href="#embed">Embedding</a>
+        <a href="https://pypi.org/project/nishachar-ide/">PyPI package</a>
+        <a href="https://www.npmjs.com/package/@nishachar/ide">npm package</a>
+      </div>
+      <div class="foot-col">
+        <h4>Project</h4>
+        <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE">Repository</a>
+        <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/main/ARCHITECTURE.md">Architecture</a>
+        <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/main/ROADMAP.md">Roadmap</a>
+        <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/main/CHANGELOG.md">Changelog</a>
+      </div>
+      <div class="foot-col">
+        <h4>Community</h4>
+        <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/main/CONTRIBUTING.md">Contributing</a>
+        <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/discussions">Discussions</a>
+        <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/issues">Issues</a>
+        <a href="https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/main/SECURITY.md">Security</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>Apache 2.0 © 2026 <a href="https://github.com/PIYUSH-MISHRA-00">Piyush Mishra</a></span>
+      <span>Built for <a href="https://github.com/ni-sh-a-char/SHE">SHE</a> and 61 other languages</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+import { LANGUAGES } from './assets/nishachar-ide.js';
+
+const hero = document.getElementById('hero');
+
+// Language wall: browser-capable ones first, since those are the ones a
+// visitor can actually try without installing anything.
+const wall = document.getElementById('wall');
+const ordered = [...LANGUAGES].sort((a, b) => {
+  if (Boolean(a.browser) !== Boolean(b.browser)) return a.browser ? -1 : 1;
+  return a.name.localeCompare(b.name);
+});
+
+wall.append(...ordered.map((language) => {
+  const chip = document.createElement('button');
+  chip.type = 'button';
+  chip.className = 'chip' + (language.browser ? ' browser' : '');
+  chip.textContent = language.name;
+  chip.title = language.browser
+    ? `${language.name} — runs right here, no backend`
+    : `${language.name} — needs a nishachar serve backend`;
+  chip.addEventListener('click', () => {
+    hero.language = language.id;
+    hero.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    hero.focus();
+  });
+  return chip;
+}));
+
+document.getElementById('lang-count').textContent = LANGUAGES.length;
+
+// Copy the install command.
+const copy = document.getElementById('copy-install');
+copy.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(document.getElementById('install-cmd').textContent.trim());
+    copy.textContent = 'COPIED';
+    setTimeout(() => { copy.textContent = 'COPY'; }, 1600);
+  } catch {
+    copy.textContent = 'PRESS CTRL+C';
+  }
+});
+</script>
+</body>
+</html>

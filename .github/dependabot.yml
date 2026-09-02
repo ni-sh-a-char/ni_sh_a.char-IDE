@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: monthly }
+    commit-message: { prefix: "ci" }
+    labels: ["dependencies"]
+
+  - package-ecosystem: npm
+    directory: /packages/web
+    target-branch: develop
+    schedule: { interval: monthly }
+    commit-message: { prefix: "deps" }
+    labels: ["dependencies"]
+    groups:
+      codemirror:
+        patterns: ["@codemirror/*", "@lezer/*", "codemirror"]
+
+  - package-ecosystem: pip
+    directory: /
+    target-branch: develop
+    schedule: { interval: monthly }
+    commit-message: { prefix: "deps" }
+    labels: ["dependencies"]

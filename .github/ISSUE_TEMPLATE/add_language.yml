@@ -1,0 +1,69 @@
+name: 🌐 Request a language
+description: Ask for a language we don't support yet — or claim one to add yourself.
+title: "Add support for "
+labels: ["language", "good first issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        There are thousands of programming languages and we ship 62, so this is
+        expected rather than a bug.
+
+        **Adding one yourself is genuinely easy** — it is a single JSON file and
+        no source code changes. If you'd like to, say so below and it's yours.
+        The guide is [languages/README.md](https://github.com/ni-sh-a-char/ni_sh_a.char-IDE/blob/develop/languages/README.md).
+
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      placeholder: Ruby
+    validations:
+      required: true
+
+  - type: input
+    id: homepage
+    attributes:
+      label: Official homepage
+      placeholder: https://www.ruby-lang.org
+    validations:
+      required: true
+
+  - type: input
+    id: extensions
+    attributes:
+      label: File extensions
+      placeholder: ".rb"
+    validations:
+      required: true
+
+  - type: input
+    id: command
+    attributes:
+      label: How do you run a single source file?
+      description: The exact command, using `{file}` for the source path.
+      placeholder: ruby {file}
+    validations:
+      required: true
+
+  - type: input
+    id: image
+    attributes:
+      label: Container image with the toolchain
+      description: An official image if one exists. Leave blank if you're unsure.
+      placeholder: ruby:3.3-slim
+
+  - type: textarea
+    id: hello
+    attributes:
+      label: Hello world
+      description: The starter shown when someone picks this language.
+      render: text
+      placeholder: puts "Hello from Ruby!"
+
+  - type: checkboxes
+    id: claim
+    attributes:
+      label: Would you like to add it?
+      options:
+        - label: Yes — assign this to me and I'll open the PR.
