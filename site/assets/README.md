@@ -4,8 +4,12 @@ This directory is populated at deploy time by
 [`.github/workflows/pages.yml`](../../.github/workflows/pages.yml), which checks
 out the `v2.0.0` branch, builds the web component, and copies the bundle here.
 
-Nothing in here is committed, so the site can never ship a stale build and the
-demo does not depend on npm having published yet.
+The JavaScript bundle is not committed, so the site can never ship a stale
+build and the demo does not depend on npm having published yet.
+
+`social-preview.png` **is** committed -- it is the Open Graph image every
+social platform fetches when someone shares a link, and it must exist at a
+stable URL whether or not a build has run.
 
 To preview the site locally:
 
