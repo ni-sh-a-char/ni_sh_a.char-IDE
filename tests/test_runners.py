@@ -204,3 +204,24 @@ def test_get_runner_rejects_an_unknown_name():
 def test_auto_runner_prefers_the_local_toolchain():
     auto = get_runner("auto")
     assert auto.pick(registry.require("python")) is auto.local
+
+
+def test_workspace_is_made_readable_by_the_container(tmp_path: Path):
+    """Dropping every capability also drops root's permission bypass.
+
+    Regression test for containers failing with "Permission denied" before the
+    program ran, because tempfile's 0700 directory was unreadable to the
+    container's uid without CAP_DAC_OVERRIDE.
+    """
+    from nishachar.runners.docker import _share_with_container
+
+    source = tmp_path / "main.py"
+    source.write_text("x", encoding="utf-8")
+    tmp_path.chmod(0o700)
+    source.chmod(0o600)
+
+    _share_with_container(tmp_path, source)
+
+    if sys.platform != "win32":
+        assert tmp_path.stat().st_mode & 0o007 == 0o007, "container needs r-x-w on the workspace"
+        assert source.stat().st_mode & 0o004, "container needs to read the source"

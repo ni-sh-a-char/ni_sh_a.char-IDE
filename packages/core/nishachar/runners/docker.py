@@ -32,6 +32,30 @@ from .base import (
 WORK = "/work"
 
 
+def _share_with_container(workspace: Path, source: Path) -> None:
+    """Make the mounted workspace reachable by the process inside the container.
+
+    ``tempfile`` creates directories as 0700 owned by the host user, and the
+    container process is a different uid. Normally root inside the container
+    would read it anyway via CAP_DAC_OVERRIDE -- but we drop every capability,
+    which is precisely what takes that bypass away. Without this the program
+    fails with "Permission denied" before it ever runs.
+
+    Widening a single-use scratch directory that is destroyed moments later is
+    the cheaper trade than handing the container back CAP_DAC_OVERRIDE, or than
+    forcing ``--user`` and breaking every toolchain that expects a writable
+    HOME. On a shared host another local user could read the snippet while it
+    runs; on a single-user machine, which is the normal case, nothing is
+    exposed that the user did not already own.
+    """
+    try:
+        workspace.chmod(0o777)  # compile steps write their output here
+        source.chmod(0o644)
+    except OSError:
+        # Windows ignores POSIX modes; the bind mount is permissive there.
+        pass
+
+
 class Limits:
     """Resource ceilings applied to every container."""
 
@@ -148,7 +172,9 @@ class DockerRunner:
         with tempfile.TemporaryDirectory(prefix="nishachar-") as host:
             mount = Path(host)
             filename = language.filename or f"main{language.extensions[0]}"
-            (mount / filename).write_text(code, encoding="utf-8")
+            source_on_host = mount / filename
+            source_on_host.write_text(code, encoding="utf-8")
+            _share_with_container(mount, source_on_host)
 
             # Paths are resolved as they appear *inside* the container.
             inside = Path(WORK)
