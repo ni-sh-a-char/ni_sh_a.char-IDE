@@ -74,19 +74,26 @@ class DockerRunner:
         self.docker = docker
         self.limits = limits
 
+    # `docker version` asks the daemon for one field. `docker info` enumerates
+    # images, plugins and storage, which on a loaded machine takes long enough
+    # that a short timeout reports a perfectly healthy daemon as missing.
+    PROBE_TIMEOUT = 30.0
+
     def available(self) -> bool:
         """True only if the Docker CLI exists *and* a daemon answers."""
         if shutil.which(self.docker) is None:
             return False
         try:
             probe = subprocess.run(
-                [self.docker, "info", "--format", "{{.ServerVersion}}"],
+                [self.docker, "version", "--format", "{{.Server.Version}}"],
                 capture_output=True,
-                timeout=10,
+                timeout=self.PROBE_TIMEOUT,
             )
         except (OSError, subprocess.SubprocessError):
             return False
-        return probe.returncode == 0
+        # The CLI exits 0 with an empty server field when it cannot reach a
+        # daemon, so the output has to be checked, not just the exit code.
+        return probe.returncode == 0 and bool(probe.stdout.strip())
 
     def supports(self, language: Language) -> bool:
         return bool(language.image)

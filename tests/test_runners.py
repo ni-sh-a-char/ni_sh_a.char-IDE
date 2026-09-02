@@ -255,3 +255,34 @@ def test_workspace_is_made_readable_by_the_container(tmp_path: Path):
     if sys.platform != "win32":
         assert tmp_path.stat().st_mode & 0o007 == 0o007, "container needs r-x-w on the workspace"
         assert source.stat().st_mode & 0o004, "container needs to read the source"
+
+
+def test_docker_availability_needs_a_reachable_daemon(monkeypatch):
+    """The CLI exits 0 with an empty server field when no daemon answers.
+
+    Regression: the probe used `docker info`, which enumerates images and
+    plugins and can exceed a short timeout on a loaded machine -- reporting a
+    healthy daemon as missing and failing the run.
+    """
+    import subprocess as sp
+
+    runner = DockerRunner()
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/docker")
+
+    def fake_run(argv, **kwargs):
+        assert "version" in argv, "probe must stay cheap"
+        assert kwargs.get("timeout", 0) >= 20, "probe needs headroom for a busy daemon"
+        return sp.CompletedProcess(argv, 0, stdout=fake_run.stdout, stderr=b"")
+
+    fake_run.stdout = b"27.3.1\n"
+    monkeypatch.setattr(sp, "run", fake_run)
+    assert runner.available() is True
+
+    # CLI present, daemon not answering.
+    fake_run.stdout = b"\n"
+    assert runner.available() is False
+
+
+def test_docker_is_unavailable_without_the_cli(monkeypatch):
+    monkeypatch.setattr("shutil.which", lambda _: None)
+    assert DockerRunner().available() is False
