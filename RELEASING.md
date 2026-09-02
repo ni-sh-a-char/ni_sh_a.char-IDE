@@ -7,10 +7,10 @@ one at a time.
 
 | Registry | Package | Auth | Status |
 |:--|:--|:--|:--|
-| PyPI | `nishachar-ide` | OIDC + `vars.PUBLISH_PYPI` | needs one-time setup |
+| PyPI | `nishachar-ide` | OIDC + `vars.PUBLISH_PYPI` | ✅ working |
 | npm | `@nishachar/ide` | `NPM_TOKEN` | needs one-time setup |
-| pub.dev | `nishachar_ide` | OIDC + `vars.PUBLISH_PUB` | needs one-time setup |
-| Maven Central | `io.github.ni-sh-a-char:nishachar-ide` | token + GPG | needs one-time setup |
+| pub.dev | `nishachar_ide` | OIDC + `vars.PUBLISH_PUB` | published manually; automation optional |
+| Maven Central | `io.github.ni-sh-a-char:nishachar-ide` | token + GPG | ✅ working |
 | GHCR | `ghcr.io/ni-sh-a-char/nishachar-ide` | built-in | ✅ working |
 
 Each job **skips** when its credentials are absent rather than failing, so a
@@ -74,7 +74,12 @@ Pick either:
 Then add the token as the repository secret `NPM_TOKEN` under
 **Settings → Secrets and variables → Actions**.
 
-The `@nishachar` scope is created automatically on first publish.
+**The `@nishachar` scope must exist first.** npm only auto-creates a scope
+that matches your *username*; an organisation scope does not appear on its
+own, and publishing to one that does not exist fails with a confusing
+`404 ... Scope not found` rather than anything about organisations. Create it
+free at <https://www.npmjs.com/org/create> (name: `nishachar`, Free plan), and
+make sure the token has access to it.
 
 ### 3. pub.dev
 

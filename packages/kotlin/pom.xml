@@ -177,12 +177,17 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.7.0</version>
+            <version>0.11.0</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
               <autoPublish>true</autoPublish>
-              <waitUntil>published</waitUntil>
+              <!-- Wait only for validation, not for the artifact to appear in
+                   the index. 'published' blocks for ~13 minutes and then the
+                   client has to parse a status response it may not recognise;
+                   0.7.0 crashed on an unknown "warnings" field *after* the
+                   deploy had already succeeded, turning a good release red. -->
+              <waitUntil>validated</waitUntil>
             </configuration>
           </plugin>
         </plugins>
